@@ -12,7 +12,6 @@ module Ruby::Marshal
 
 	def self._load(source : Bytes)
 		validate_version!(source)
-		puts source.hexstring
 	end
 
 	# First 2 bytes contain the version
@@ -22,7 +21,7 @@ module Ruby::Marshal
 
 		unless major_version == 4 && minor_version == 8
 			version = "#{major_version}.#{minor_version}"
-			raise UnsupportedVersion.new("Unsupported version encountered in marshalled data. #{version} != 48.")
+			raise UnsupportedVersion.new("Unsupported version encountered in marshalled data. #{version} != 4.8.")
 		end
   end
 
