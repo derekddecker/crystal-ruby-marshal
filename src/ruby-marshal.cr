@@ -49,14 +49,20 @@ module Ruby::Marshal
 
 	def self.process_stream(stream : Bytes)
 		while (!stream.empty?)
-			type = next_type(stream)
-			stream = stream[0, (1 + type.object_size)]
+			object_meta = next_type(stream)
+			obj_stream_length = 1 + object_meta.object_size
+			object = stream[0, obj_stream_length]
+			process_object(object)
+			stream = stream + obj_stream_length
 		end
 	end
 
 	def self.next_type(stream : Bytes)
-		object_type_byte = stream[0, 1].first
-		StreamObjectMetaFactory.get(object_type_byte)
+		StreamObjectMetaFactory.get(stream[0])
+	end
+
+	def self.process_object(object : Bytes)
+		# TODO
 	end
 
 end
