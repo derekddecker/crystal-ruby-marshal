@@ -1,0 +1,9 @@
+name: ruby-marshal
+version: 0.1.0
+
+authors:
+  - Derek Decker <derekddecker@gmail.com>
+
+crystal: 0.23.1
+
+license: MIT
