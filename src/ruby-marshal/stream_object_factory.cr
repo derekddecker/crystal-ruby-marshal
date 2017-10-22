@@ -15,6 +15,7 @@ module Ruby::Marshal
 				else
 					object = NullStreamObject.new
 			end
+			object.read(stream)
 			return object
 		end
 
