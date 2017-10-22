@@ -12,7 +12,7 @@ module Ruby::Marshal
 		end
 
 		def read(stream : Bytes)
-			@data = UInt32.new(stream[1, size].join)
+			@data = ::IO::ByteFormat::LittleEndian.decode(UInt32, stream[1, size])
 		end
 
 	end

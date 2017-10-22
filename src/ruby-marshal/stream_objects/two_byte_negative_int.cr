@@ -12,7 +12,7 @@ module Ruby::Marshal
 		end
 
 		def read(stream : Bytes)
-			@data = Int16.new(stream[1, size].join)
+			@data = ::IO::ByteFormat::LittleEndian.decode(Int16, stream[1, size])
 		end
 
 	end

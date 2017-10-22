@@ -12,7 +12,10 @@ module Ruby::Marshal
 		end
 
 		def read(stream : Bytes)
-			@data = Int16.new(stream[1, size].join)
+			data_bytes = stream[1, size]
+			complement_slice = Slice(UInt8).new(size)
+			data_bytes.each_with_index { |byte, index| complement_slice[index] = ~byte }
+			@data = -(Int16.new(complement_slice.join) + 1)
 		end
 
 	end

@@ -56,6 +56,7 @@ module Ruby::Marshal
 			stream = stream + obj_stream_length
 			result = object
 		end
+		puts result.inspect
 		return result
 	end
 

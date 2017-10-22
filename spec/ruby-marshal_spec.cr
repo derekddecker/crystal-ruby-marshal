@@ -16,8 +16,62 @@ describe Ruby::Marshal do
 
 	end
 
-	it "should read a marshalled integer" do
-		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-integer.out" ) ).data.should eq(145)
+	it "should read a marshalled positive one byte integer lower bound" do
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-positive-one-byte-integer-lower.out" ) )
+		object.should be_a(Ruby::Marshal::OneBytePositiveInt)
+		object.data.should eq(123)
+	end
+
+	it "should read a marshalled positive one byte integer upper bound" do
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-positive-one-byte-integer-upper.out" ) )
+		object.should be_a(Ruby::Marshal::OneBytePositiveInt)
+		object.data.should eq(255)
+	end
+
+	it "should read a marshalled negative one byte integer lower bound" do
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-negative-one-byte-integer-lower.out" ) )
+		object.should be_a(Ruby::Marshal::OneByteNegativeInt)
+		object.data.should eq(-256)
+	end
+
+	it "should read a marshalled negative one byte integer upper bound" do
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-negative-one-byte-integer-upper.out" ) )
+		object.should be_a(Ruby::Marshal::OneByteNegativeInt)
+		object.data.should eq(-1)
+	end
+
+
+	it "should read a marshalled positive two byte integer lower bound" do
+		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-positive-two-byte-integer-lower.out" ) ).data.should eq(256)
+	end
+
+	it "should read a marshalled positive two byte integer upper bound" do
+		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-positive-two-byte-integer-upper.out" ) ).data.should eq(65535)
+	end
+
+	it "should read a marshalled negative two byte integer lower bound" do
+		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-negative-two-byte-integer-lower.out" ) ).data.should eq(-32768)
+	end
+
+	it "should read a marshalled negative two byte integer upper bound" do
+		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-negative-two-byte-integer-upper.out" ) ).data.should eq(-257)
+	end
+
+
+	it "should read a marshalled positive three byte integer lower bound" do
+		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-positive-three-byte-integer-lower.out" ) ).data.should eq(65_536)
+	end
+
+	it "should read a marshalled positive three byte integer upper bound" do
+		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-positive-three-byte-integer-upper.out" ) ).data.should eq(4_294_967_295)
+	end
+
+	it "should read a marshalled negative three byte integerlower bound" do
+		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-negative-three-byte-integer-lower.out" ) ).data.should eq(-2_147_483_648)
+	end
+
+	it "should read a marshalled negative three byte integer upper bound" do
+		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-negative-three-byte-integer-upper.out" ) ).data.should eq(-32_769)
 	end
 
 end
