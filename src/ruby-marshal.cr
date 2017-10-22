@@ -52,7 +52,7 @@ module Ruby::Marshal
 		while (!stream.empty?)
 			object = next_object(stream)
 			object.read(stream)
-			obj_stream_length = 1 + object.size
+			obj_stream_length = object.stream_size
 			stream = stream + obj_stream_length
 			result = object
 		end

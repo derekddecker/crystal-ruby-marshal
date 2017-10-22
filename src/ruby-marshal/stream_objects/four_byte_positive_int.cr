@@ -1,10 +1,10 @@
-require "./stream_object"
+require "./integer_stream_object"
 
 module Ruby::Marshal
 
 	FOUR_BYTE_POSITIVE_INT_ID = 0x04
   FOUR_BYTE_POSITIVE_INT_LENGTH = 0x04
-	class FourBytePositiveInt < StreamObject
+	class FourBytePositiveInt < IntegerStreamObject
 	
 		def initialize
 			super(FOUR_BYTE_POSITIVE_INT_ID, FOUR_BYTE_POSITIVE_INT_LENGTH)

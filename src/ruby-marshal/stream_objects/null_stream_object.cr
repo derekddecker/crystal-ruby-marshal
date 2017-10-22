@@ -5,7 +5,7 @@ module Ruby::Marshal
 	class NullStreamObject < StreamObject
 
 		def initialize
-			super(0x00, 0x00)
+			super(0x00, 0x00, Int8.new(0))
 			@data = 0x00
 		end
 
