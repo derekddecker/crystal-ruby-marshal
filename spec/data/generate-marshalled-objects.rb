@@ -16,3 +16,5 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-valid.out'), 'w') { |
 
 bad_version = ["00000100", "00001001"].map { |i| i.to_i(2).chr }.join
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-invalid-version.out'), 'wb') { |f| f.write(bad_version) }
+
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-integer.out'), 'wb') { |f| f.write(Marshal.dump(145)) }

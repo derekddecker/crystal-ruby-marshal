@@ -16,4 +16,8 @@ describe Ruby::Marshal do
 
 	end
 
+	it "should read a marshalled integer" do
+		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-integer.out" ) ).data.should eq(145)
+	end
+
 end

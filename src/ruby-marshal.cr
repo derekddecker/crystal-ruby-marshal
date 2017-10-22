@@ -38,8 +38,8 @@ module Ruby::Marshal
 
 	# First 2 bytes contain the version
 	def self.validate_version!(source : Bytes)
-		major_version = source[0, 1].first
-		minor_version = source[1, 1].first
+		major_version = source[0]
+		minor_version = source[1]
 
 		unless major_version == MAJOR_VERSION && minor_version <= MINOR_VERSION
 			version = "#{major_version}.#{minor_version}"
@@ -47,22 +47,20 @@ module Ruby::Marshal
 		end
   end
 
-	def self.process_stream(stream : Bytes)
+	def self.process_stream(stream : Bytes) : StreamObject
+		result = NullStreamObject.new
 		while (!stream.empty?)
-			object_meta = next_type(stream)
-			obj_stream_length = 1 + object_meta.object_size
-			object = stream[0, obj_stream_length]
-			process_object(object)
+			object = next_object(stream)
+			object.read(stream)
+			obj_stream_length = 1 + object.size
 			stream = stream + obj_stream_length
+			result = object
 		end
+		return result
 	end
 
-	def self.next_type(stream : Bytes)
-		StreamObjectMetaFactory.get(stream[0])
-	end
-
-	def self.process_object(object : Bytes)
-		# TODO
+	def self.next_object(stream : Bytes)
+		StreamObjectFactory.get(stream)
 	end
 
 end
