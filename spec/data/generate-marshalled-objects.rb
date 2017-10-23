@@ -30,16 +30,15 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-one-byte-int
 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-two-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(256)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-two-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(65_535)) }
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-two-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-32_768)) }
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-two-byte-integer-lower-wtf.out'), 'wb') { |f| f.write(Marshal.dump(-32_770)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-two-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-65_536)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-two-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-257)) }
 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-three-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(65_536)) }
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-three-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(16_776_960)) }
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-three-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-8_388_480)) }
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-three-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-32_769)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-three-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(16_777_215)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-three-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-16_777_216)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-three-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-65_537)) }
 
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-four-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(65_536)) }
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-four-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(2_147_483_647)) }
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-2_147_483_648)) }
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-32_769)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-four-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(16_777_216)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-four-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(1_073_741_823)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-1_073_741_824)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-16_777_217)) }
