@@ -12,7 +12,17 @@ module Ruby::Marshal
 		end
 
 		def read(stream : Bytes)
-			@data = ::IO::ByteFormat::LittleEndian.decode(Int32, stream[1, size])
+			stream += 1
+			data_bytes = Slice(UInt8).new(size)
+			data_bytes.copy_from(stream.to_unsafe, size)
+			# endian flip
+			data_bytes.reverse!
+			# pad + complement
+			padded_slice = Slice(UInt8).new(4)
+			padded_slice[1] = ~data_bytes[0]
+			padded_slice[2] = ~data_bytes[1]
+			padded_slice[3] = ~data_bytes[2]
+			@data = -(IO::ByteFormat::BigEndian.decode(Int32, padded_slice) + 1)
 		end
 
 	end

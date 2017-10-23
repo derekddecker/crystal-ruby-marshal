@@ -12,7 +12,11 @@ module Ruby::Marshal
 		end
 
 		def read(stream : Bytes)
-			@data = ::IO::ByteFormat::LittleEndian.decode(UInt32, stream[1, size])
+			data_bytes = stream[1, size]
+			padded_slice = Slice(UInt8).new(4)
+			padded_slice.copy_from(data_bytes.to_unsafe, size)
+			padded_slice[0] = UInt8.new(0x00)
+			@data = ::IO::ByteFormat::LittleEndian.decode(Int32, padded_slice)
 		end
 
 	end

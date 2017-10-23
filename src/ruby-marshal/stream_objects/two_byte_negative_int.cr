@@ -8,11 +8,20 @@ module Ruby::Marshal
 	
 		def initialize
 			super(TWO_BYTE_NEGATIVE_INT_ID, TWO_BYTE_NEGATIVE_INT_LENGTH)
-			@data = Int16.new(0)
+			@data = Int32.new(0)
 		end
 
 		def read(stream : Bytes)
-			@data = ::IO::ByteFormat::LittleEndian.decode(Int16, stream[1, size])
+			stream += 1
+			data_bytes = Slice(UInt8).new(size)
+			data_bytes.copy_from(stream.to_unsafe, size)
+			# endian flip
+			data_bytes.reverse!
+			# pad + complement
+			padded_slice = Slice(UInt8).new(4)
+			padded_slice[2] = ~data_bytes[0]
+			padded_slice[3] = ~data_bytes[1]
+			@data = -(IO::ByteFormat::BigEndian.decode(Int32, padded_slice) + 1)
 		end
 
 	end
