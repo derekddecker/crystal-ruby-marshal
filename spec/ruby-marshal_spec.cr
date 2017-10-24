@@ -140,4 +140,11 @@ describe Ruby::Marshal do
 		object.data.should eq(-16_777_217)
 	end
 
+	it "should read a marshalled symbol" do
+		puts `xxd #{SPEC_ROOT}/data/marshalled-symbol.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-symbol.out" ) )
+		object.should be_a(Ruby::Marshal::Symbol)
+		object.data.should eq("test_symbol")
+	end
+
 end

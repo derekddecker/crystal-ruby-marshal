@@ -11,7 +11,10 @@ module Ruby::Marshal
 				when INTEGER_TYPE_IDENTIFIER # "i"
 					object = get_int(stream)
 				when SYMBOL_TYPE_IDENTIFIER # ":"
-					object = Symbol.new(Int32.new(stream[0]))
+					symbol_length = get_int(stream)
+					symbol_length.read(stream)
+					object = Symbol.new(Int32.new(symbol_length.data))
+					stream += symbol_length.size
 				else
 					object = NullStreamObject.new
 			end
@@ -19,7 +22,7 @@ module Ruby::Marshal
 			return object
 		end
 
-		def self.get_int(stream : Bytes) : StreamObject
+		def self.get_int(stream : Bytes) : IntegerStreamObject
 			puts "found int type #{stream[0]}"
 			case stream[0]
 				when 0x00

@@ -19,7 +19,6 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-invalid-version.out')
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-1)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-122)) }
 
-
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(1)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(122)) }
 
@@ -42,3 +41,5 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-four-byte-in
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-four-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(1_073_741_823)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-1_073_741_824)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-16_777_217)) }
+
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-symbol.out'), 'w') { |f| f.write(Marshal.dump(:test_symbol)) }

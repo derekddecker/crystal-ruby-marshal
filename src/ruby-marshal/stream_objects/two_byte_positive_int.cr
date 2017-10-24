@@ -8,7 +8,7 @@ module Ruby::Marshal
 	
 		def initialize
 			super(TWO_BYTE_POSITIVE_INT_ID, TWO_BYTE_POSITIVE_INT_LENGTH)
-			@data = UInt16.new(0)
+			@data = Int16.new(0)
 		end
 
 		def read(stream : Bytes)

@@ -2,8 +2,7 @@ module Ruby::Marshal
 
 	abstract class StreamObject
 
-		getter :id, :size, :data, :object_identifier
-		@data : UInt8 | Int8 | UInt16 | Int16 | UInt32 | Int32 | ::Symbol | ::Nil
+		getter :id, :size, :object_identifier
 
 		def initialize(@id : Int32, @size : Int32, @object_identifier : Int8)
 		end
