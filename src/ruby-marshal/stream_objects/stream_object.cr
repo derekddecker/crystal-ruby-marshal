@@ -9,7 +9,7 @@ module Ruby::Marshal
 
 		abstract def read(stream : Bytes)
 
-		def stream_size : Int32
+		def stream_size
 			# 1 for the 8 bit identifier "i"
 			# 1 for the length byte
 			return (1 + 1 + @size)

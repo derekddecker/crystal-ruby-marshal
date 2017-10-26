@@ -4,11 +4,11 @@ module Ruby::Marshal
 
 	class NullStreamObject < StreamObject
 
-		@data : ::Nil
 		getter :data
+    @data : ::Nil
 
 		def initialize
-			super(0x00, 0x00, Int8.new(0))
+      super(0x00, Int32.new(0x00), Int8.new(0))
 			@data = nil
 		end
 

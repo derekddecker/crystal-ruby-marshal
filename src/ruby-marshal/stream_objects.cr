@@ -1,3 +1,5 @@
+require "./stream_objects/heap"
+
 require "./stream_objects/zero_byte_int"
 require "./stream_objects/one_byte_int"
 require "./stream_objects/one_byte_positive_int"

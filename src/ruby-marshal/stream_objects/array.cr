@@ -8,12 +8,15 @@ module Ruby::Marshal
 	class Array < StreamObject
 
 		getter :data
+    alias Type = ::Int32 | ::String | ::Nil | ::Array(Type)
+    @data : Type
+    @num_objects : Int32
 
 		def initialize(stream : Bytes)
 			array_length = IntegerStreamObject.get(stream)
-			@num_objects = Int32.new(array_length.data)
-			@data = ::Array(StreamObject).new(@num_objects)
-			super(ARRAY_ID, Int32.new(array_length.size), ARRAY_TYPE_IDENTIFIER)
+      @num_objects = array_length.data
+      @data = ::Array(Type).new(@num_objects)
+			super(ARRAY_ID, array_length.size, ARRAY_TYPE_IDENTIFIER)
 			stream += @size
 			read(stream)
 			#ObjectHeap.add(self)
@@ -22,14 +25,19 @@ module Ruby::Marshal
 		def read(stream : Bytes)
 			obj_index = 0
 			obj_size = 0
-			while(obj_index < @num_objects) 
+			while(obj_index < @num_objects)
 				object = StreamObjectFactory.get(stream)
-				@data << object
+        puts object.data.inspect
+        @data.as(::Array(Type)) << object.data
 				obj_index += 1
 				stream += object.stream_size
 				@size += object.stream_size
 			end
 		end
+
+    #def data
+    #  @data.map { |obj| obj.data }
+    #end
 
 	end
 

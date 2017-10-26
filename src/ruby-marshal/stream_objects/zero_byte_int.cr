@@ -3,7 +3,7 @@ require "./integer_stream_object"
 module Ruby::Marshal
 
 	ZERO_BYTE_INT_ID = 0x00
-	ZERO_BYTE_INT_LENGTH = 0x00
+  ZERO_BYTE_INT_LENGTH = Int32.new(0x00)
 	class ZeroByteInt < IntegerStreamObject
 
 		def initialize(stream : Bytes)
@@ -13,7 +13,6 @@ module Ruby::Marshal
 
 		def read(stream : Bytes)
 			# noop
-			@data = 0x00
 		end
 
 	end

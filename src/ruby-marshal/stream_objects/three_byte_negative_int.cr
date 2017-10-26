@@ -3,9 +3,9 @@ require "./integer_stream_object"
 module Ruby::Marshal
 
 	THREE_BYTE_NEGATIVE_INT_ID = 0xfd
-	THREE_BYTE_NEGATIVE_INT_LENGTH = 0x03
+  THREE_BYTE_NEGATIVE_INT_LENGTH = Int32.new(0x03)
 	class ThreeByteNegativeInt < IntegerStreamObject
-	
+
 		def initialize(stream : Bytes)
 			super(THREE_BYTE_NEGATIVE_INT_ID, THREE_BYTE_NEGATIVE_INT_LENGTH)
 			read(stream)
