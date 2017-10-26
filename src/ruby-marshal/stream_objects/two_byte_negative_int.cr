@@ -6,9 +6,9 @@ module Ruby::Marshal
 	TWO_BYTE_NEGATIVE_INT_LENGTH = 0x02
 	class TwoByteNegativeInt < IntegerStreamObject
 	
-		def initialize
+		def initialize(stream : Bytes)
 			super(TWO_BYTE_NEGATIVE_INT_ID, TWO_BYTE_NEGATIVE_INT_LENGTH)
-			@data = Int32.new(0)
+			read(stream)
 		end
 
 		def read(stream : Bytes)

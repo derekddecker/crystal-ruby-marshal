@@ -8,11 +8,13 @@ module Ruby::Marshal
 	class Symbol < StreamObject
 
 		getter :data
-		@data : ::String
+		@data = "" # : ::String
 	
-		def initialize(@size : Int32)
-			super(SYMBOL_ID, @size, SYMBOL_TYPE_IDENTIFIER)
-			@data = ""
+		def initialize(stream : Bytes)
+			symbol_length = IntegerStreamObject.get(stream)
+			super(SYMBOL_ID, Int32.new(symbol_length.data), SYMBOL_TYPE_IDENTIFIER)
+			stream += symbol_length.size
+			read(stream)
 		end
 
 		def read(stream : Bytes)

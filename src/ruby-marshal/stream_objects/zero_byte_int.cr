@@ -6,9 +6,9 @@ module Ruby::Marshal
 	ZERO_BYTE_INT_LENGTH = 0x00
 	class ZeroByteInt < IntegerStreamObject
 
-		def initialize
+		def initialize(stream : Bytes)
 			super(ZERO_BYTE_INT_ID, ZERO_BYTE_INT_LENGTH)
-			@data = 0x00
+			read(stream)
 		end
 
 		def read(stream : Bytes)

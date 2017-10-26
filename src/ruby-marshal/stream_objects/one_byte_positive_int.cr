@@ -6,8 +6,9 @@ module Ruby::Marshal
 	ONE_BYTE_POSITIVE_INT_LENGTH = 0x01
 	class OneBytePositiveInt < IntegerStreamObject
 
-		def initialize
+		def initialize(stream : Bytes)
 			super(ONE_BYTE_POSITIVE_INT_ID, ONE_BYTE_POSITIVE_INT_LENGTH)
+			read(stream)
 		end
 
 		def read(stream : Bytes)

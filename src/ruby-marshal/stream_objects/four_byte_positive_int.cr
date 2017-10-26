@@ -6,9 +6,9 @@ module Ruby::Marshal
   FOUR_BYTE_POSITIVE_INT_LENGTH = 0x04
 	class FourBytePositiveInt < IntegerStreamObject
 	
-		def initialize
+		def initialize(stream : Bytes)
 			super(FOUR_BYTE_POSITIVE_INT_ID, FOUR_BYTE_POSITIVE_INT_LENGTH)
-			@data = Int32.new(0)
+			read(stream)
 		end
 
 		def read(stream : Bytes)
