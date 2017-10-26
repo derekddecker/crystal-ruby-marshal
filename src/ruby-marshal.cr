@@ -51,11 +51,9 @@ module Ruby::Marshal
 		result = NullStreamObject.new
 		while (!stream.empty?)
 			object = next_object(stream)
-			obj_stream_length = object.stream_size
-			stream = stream + obj_stream_length
+			stream += object.stream_size
 			result = object
 		end
-		puts result.inspect
 		return result
 	end
 

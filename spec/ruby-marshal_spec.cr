@@ -147,4 +147,11 @@ describe Ruby::Marshal do
 		object.data.should eq("test_symbol")
 	end
 
+	it "should read a marshalled symbol array" do
+		puts `xxd #{SPEC_ROOT}/data/marshalled-symbol-array.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-symbol-array.out" ) )
+		object.should be_a(Ruby::Marshal::Array)
+		object.data.should eq(["hello", "hello"])
+	end
+
 end

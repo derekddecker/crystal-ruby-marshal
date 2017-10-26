@@ -10,4 +10,5 @@ require "./stream_objects/four_byte_positive_int"
 require "./stream_objects/four_byte_negative_int"
 
 require "./stream_objects/symbol"
+require "./stream_objects/array"
 require "./stream_objects/null_stream_object"

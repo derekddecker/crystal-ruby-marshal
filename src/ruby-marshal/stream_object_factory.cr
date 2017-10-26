@@ -12,6 +12,10 @@ module Ruby::Marshal
 					return IntegerStreamObject.get(stream)
 				when SYMBOL_TYPE_IDENTIFIER # ":"
 					return Symbol.new(stream)
+				when SYMBOL_POINTER_TYPE_IDENTIFIER # ":"
+					return SymbolPointer.new(stream)
+				when ARRAY_TYPE_IDENTIFIER # "["
+					return Array.new(stream)
 				else
 					return NullStreamObject.new
 			end

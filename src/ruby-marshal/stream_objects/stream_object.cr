@@ -12,7 +12,7 @@ module Ruby::Marshal
 		def stream_size : Int32
 			# 1 for the 8 bit identifier "i"
 			# 1 for the length byte
-			return (1 + 1 + size)
+			return (1 + 1 + @size)
 		end
 
 	end
