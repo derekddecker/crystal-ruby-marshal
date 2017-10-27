@@ -154,4 +154,11 @@ describe Ruby::Marshal do
 		object.data.should eq(["hello", "hello"])
 	end
 
+	it "should read a marshalled complex array" do
+		puts `xxd #{SPEC_ROOT}/data/marshalled-complex-array.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-complex-array.out" ) )
+		object.should be_a(Ruby::Marshal::Array)
+		object.data.should eq(["hello", "hello", ["hello", "test", 1, nil], 1_000_000, true, false, nil, "string", "string"])
+	end
+
 end

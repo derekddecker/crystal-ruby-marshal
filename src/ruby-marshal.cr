@@ -5,7 +5,7 @@ module Ruby::Marshal
   MAJOR_VERSION = 4
 	MINOR_VERSION = 8
 
-	def self.load(source : String)
+	def self.load(source : ::String)
     self._load(source.to_slice)
 	end
 
@@ -49,17 +49,7 @@ module Ruby::Marshal
   end
 
 	def self.process_stream(stream : Bytes) : StreamObject
-		result = NullStreamObject.new
-		while (!stream.empty?)
-			object = next_object(stream)
-			stream += object.stream_size
-			result = object
-		end
-		return result
-	end
-
-	def self.next_object(stream : Bytes)
-		StreamObjectFactory.get(stream)
+		return StreamObjectFactory.get(stream)
 	end
 
 end

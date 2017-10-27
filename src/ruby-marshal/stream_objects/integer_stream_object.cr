@@ -15,7 +15,7 @@ module Ruby::Marshal
 		end
 
 		def self.get(stream : Bytes)
-			puts "found int type #{stream[0]}"
+			#puts "found int type #{stream[0]}"
 			case stream[0]
 				when 0x00
 					# The value of the integer is 0. No bytes follow.

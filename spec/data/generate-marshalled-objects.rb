@@ -44,3 +44,4 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-in
 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-symbol.out'), 'w') { |f| f.write(Marshal.dump(:test_symbol)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-symbol-array.out'), 'w') { |f| f.write(Marshal.dump([:hello, :hello])) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-complex-array.out'), 'w') { |f| f.write(Marshal.dump([:hello, :hello, [:hello, :test, 1, nil],1_000_000, true, false, nil, "string", "string"])) }

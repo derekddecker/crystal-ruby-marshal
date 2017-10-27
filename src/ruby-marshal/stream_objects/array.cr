@@ -8,7 +8,7 @@ module Ruby::Marshal
 	class Array < StreamObject
 
 		getter :data
-    alias RubyStreamArray = ::Int32 | ::String | ::Nil | ::Array(RubyStreamArray)
+    alias RubyStreamArray = ::Bool | ::Int32 | ::String | ::Nil | ::Array(RubyStreamArray)
     @data : RubyStreamArray
     @num_objects : Int32
 
@@ -26,6 +26,7 @@ module Ruby::Marshal
 			obj_index = 0
 			obj_size = 0
 			while(obj_index < @num_objects)
+				puts stream.hexdump
 				object = StreamObjectFactory.get(stream)
         puts object.data.inspect
         @data.as(::Array(RubyStreamArray)) << object.data
@@ -33,6 +34,10 @@ module Ruby::Marshal
 				stream += object.stream_size
 				@size += object.stream_size
 			end
+		end
+
+		def stream_size
+			return 1 + @size
 		end
 
 	end

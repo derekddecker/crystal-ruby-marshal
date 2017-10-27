@@ -2,16 +2,17 @@ require "./stream_object"
 
 module Ruby::Marshal
 
-	NIL_TYPE_IDENTIFIER = Int8.new(0) # "0"
+	TRUE_TYPE_IDENTIFIER = Int8.new(84) # "T"
+	FALSE_TYPE_IDENTIFIER = Int8.new(70) # "F"
 
-	class NullStreamObject < StreamObject
+	class BoolStreamObject < StreamObject
 
 		getter :data
-    @data : ::Nil
+    @data : ::Bool
 
-		def initialize(stream : Bytes)
+		def initialize(val : Bool)
       super(0x00, Int32.new(0x00), Int8.new(0))
-			@data = nil
+			@data = val
 		end
 
 		def read(stream : Bytes)

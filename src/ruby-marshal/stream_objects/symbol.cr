@@ -19,7 +19,7 @@ module Ruby::Marshal
 		end
 
 		def read(stream : Bytes)
-			@data = String.new(stream[0, size])
+			@data = ::String.new(stream[0, size])
 		end
 
 	end
@@ -33,18 +33,20 @@ module Ruby::Marshal
 		def initialize(stream : Bytes)
 			@data = ""
 			pointer_index = IntegerStreamObject.get(stream)
-      super(SYMBOL_ID, pointer_index.data, SYMBOL_POINTER_TYPE_IDENTIFIER)
-			stream += pointer_index.size
+      super(SYMBOL_ID, pointer_index.stream_size, SYMBOL_POINTER_TYPE_IDENTIFIER)
+			@heap_index = Int32.new(pointer_index.data)
+			puts "pointer index size: #{pointer_index}"
 			read(stream)
 		end
 
 		def read(stream : Bytes)
-			@data = Heap.get_sym(size).data
+			@data = Heap.get_sym(@heap_index).data
 		end
 
 		def stream_size
 			# 1 for the 8 bit identifier ";"
-			return (1 + size)
+			puts "symbol pointer size: #{size}"
+			return size
 		end
 
 	end
