@@ -2,12 +2,10 @@ require "./integer_stream_object"
 
 module Ruby::Marshal
 
-	TWO_BYTE_NEGATIVE_INT_ID = 0xfe
-  TWO_BYTE_NEGATIVE_INT_LENGTH = Int32.new(0x02)
 	class TwoByteNegativeInt < IntegerStreamObject
 
 		def initialize(stream : Bytes)
-			super(TWO_BYTE_NEGATIVE_INT_ID, TWO_BYTE_NEGATIVE_INT_LENGTH)
+			super(Int32.new(0x02))
 			read(stream)
 		end
 

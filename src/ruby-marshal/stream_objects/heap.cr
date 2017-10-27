@@ -5,13 +5,17 @@ module Ruby::Marshal
 	class Heap
 
 		@@sym_heap = ::Array(Symbol).new
-		@@obj_heap = ::Array(String).new
+		@@obj_heap = ::Array(String | Array).new
 
 		def self.add(symbol : Symbol)
 			@@sym_heap << symbol
 		end
 
-		def self.add(object : String)
+		def self.add(object : ::Ruby::Marshal::String)
+			@@obj_heap << object
+		end
+
+		def self.add(object : ::Ruby::Marshal::Array)
 			@@obj_heap << object
 		end
 
@@ -25,6 +29,7 @@ module Ruby::Marshal
 
 		def self.init
 		  @@sym_heap.clear
+		  @@obj_heap.clear
     end
 
 	end

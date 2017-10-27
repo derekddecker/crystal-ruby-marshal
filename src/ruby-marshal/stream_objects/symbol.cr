@@ -2,9 +2,6 @@ require "./stream_object"
 
 module Ruby::Marshal
 
-	SYMBOL_ID = 0x0
-	SYMBOL_TYPE_IDENTIFIER = Int8.new(58) # ":"
-
 	class Symbol < StreamObject
 
 		getter :data
@@ -12,8 +9,9 @@ module Ruby::Marshal
 		def initialize(stream : Bytes)
 			@data = ""
 			symbol_length = IntegerStreamObject.get(stream)
-      super(SYMBOL_ID, symbol_length.data, SYMBOL_TYPE_IDENTIFIER)
-			stream += symbol_length.size
+			@symbol_length = symbol_length.size.as(Int32)
+      super(symbol_length.data)
+			stream += @symbol_length
 			read(stream)
 			Heap.add(self)
 		end
@@ -22,33 +20,11 @@ module Ruby::Marshal
 			@data = ::String.new(stream[0, size])
 		end
 
-	end
-
-	SYMBOL_POINTER_TYPE_IDENTIFIER = Int8.new(59) # ";"
-
-	class SymbolPointer < StreamObject
-
-		getter :data
-
-		def initialize(stream : Bytes)
-			@data = ""
-			pointer_index = IntegerStreamObject.get(stream)
-      super(SYMBOL_ID, pointer_index.stream_size, SYMBOL_POINTER_TYPE_IDENTIFIER)
-			@heap_index = Int32.new(pointer_index.data)
-			puts "pointer index size: #{pointer_index}"
-			read(stream)
-		end
-
-		def read(stream : Bytes)
-			@data = Heap.get_sym(@heap_index).data
-		end
-
 		def stream_size
-			# 1 for the 8 bit identifier ";"
-			puts "symbol pointer size: #{size}"
-			return size
+			1 + @symbol_length + size
 		end
 
 	end
 
 end
+
