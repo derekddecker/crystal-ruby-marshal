@@ -1,8 +1,13 @@
 # crystal-ruby-marshal
 
-Provides a crystal-lang API to serialize into and deserialize from marshalled binary 
+Provides a crystal API to serialize into and deserialize from marshalled binary 
 Ruby objects. This is useful for reading things such as Rack session objects which 
-are generally base64 encoded, encrypted marshalled ruby objects. 
+are generally base64 encoded, encrypted marshalled ruby objects - and would otherwise
+be inaccessible in your crystal application. 
+
+# Quirks
+This project is still experimental. Due to differences in crystal and ruby, symbols 
+cannot be created at runtime, so they are cast to strings.
 
 ## Installation
 
