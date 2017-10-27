@@ -10,7 +10,7 @@ module Ruby::Marshal
 	end
 
 	def self.load(source : IO)
-    self._load(source.gets_to_end)
+    self.load(source.gets_to_end)
 	end
 
 	# The first two bytes of the stream contain the major and minor version, each as

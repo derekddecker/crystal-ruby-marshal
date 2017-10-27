@@ -8,7 +8,7 @@ describe Ruby::Marshal do
 
 	it "should raise an exception on invalid version" do
 		expect_raises(Ruby::Marshal::UnsupportedVersion) do
-			Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-invalid-version.out" ) )
+			Ruby::Marshal.load( File.open( "#{SPEC_ROOT}/data/marshalled-invalid-version.out" ) )
 		end
 	end
 
