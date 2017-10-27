@@ -2,21 +2,19 @@ require "./stream_object"
 
 module Ruby::Marshal
 
-	INTEGER_TYPE_IDENTIFIER = Int8.new(105) # "i"
 
 	abstract class IntegerStreamObject < StreamObject
 
     @data : Int32
     getter :data
 
-		def initialize(@id : Int32, @size : Int32)
-			super(@id, @size, INTEGER_TYPE_IDENTIFIER)
+		def initialize(size : Int32)
+			super(size)
       @data = Int32.new(0x00)
 		end
 
 		def self.get(stream : Bytes)
-			#puts "found int type #{stream[0]}"
-			case stream[0]
+			case stream.first
 				when 0x00
 					# The value of the integer is 0. No bytes follow.
 					return ZeroByteInt.new(stream)
@@ -60,6 +58,12 @@ module Ruby::Marshal
 				else
 					return OneByteInt.new(stream)
 				end
+		end
+
+		def stream_size
+			# 1 for the 8 bit identifier "i"
+			# 1 for the length byte
+			return (1 + 1 + @size)
 		end
 
 	end

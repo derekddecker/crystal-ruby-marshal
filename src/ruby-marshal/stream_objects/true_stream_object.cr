@@ -2,20 +2,19 @@ require "./stream_object"
 
 module Ruby::Marshal
 
-	class NullStreamObject < StreamObject
+	class TrueStreamObject < StreamObject
 
+		@data : Bool
 		getter :data
-    @data : ::Nil
 
 		def initialize(stream : Bytes)
-      super(Int32.new(0x00))
-			@data = nil
+			super(Int32.new(0x00))
+			@data = true
 		end
 
 		def read(stream : Bytes)
 			# noop
 		end
-
 	end
 
 end
