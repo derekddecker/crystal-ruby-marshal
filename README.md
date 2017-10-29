@@ -35,6 +35,28 @@ Ruby::Marshal.load( File.read( "marshalled.object" ) )
 Ruby::Marshal.load( File.open("marshalled.object") )
 ```
 
+## Todo
+ - [x] "true, false, nil¶ ↑"
+ - [x] "Fixnum and long¶ ↑"
+ - [x] "Symbols and Byte Sequence¶ ↑"
+ - [x] "Object References¶ ↑"
+ - [x] "Instance Variables¶ ↑"
+ - [] "Extended¶ ↑"
+ - [x] "Array¶ ↑"
+ - [] "Bignum¶ ↑"
+ - [] "Class and Module¶ ↑"
+ - [] "Data¶ ↑"
+ - [] "Float¶ ↑"
+ - [x] "Hash and Hash with Default Value¶ ↑"
+ - [] "Module and Old Module¶ ↑"
+ - [] "Object¶ ↑" 
+ - [] "Regular Expression¶ ↑"
+ - [x] "String¶ ↑"
+ - [] "Struct¶ ↑"
+ - [] "User Class¶ ↑"
+ - [] "User Defined¶ ↑"
+ - [] "User Marshal¶ ↑"
+
 ## Contributing
 
 1. Fork it ( https://github.com/derekddecker/crystal-ruby-marshal/fork )
