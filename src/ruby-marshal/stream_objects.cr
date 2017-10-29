@@ -10,6 +10,7 @@ require "./stream_objects/four_byte_positive_int"
 require "./stream_objects/four_byte_negative_int"
 
 require "./stream_objects/float"
+require "./stream_objects/bignum"
 require "./stream_objects/instance_object"
 require "./stream_objects/object"
 require "./stream_objects/object_pointer"

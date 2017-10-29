@@ -43,7 +43,7 @@ Ruby::Marshal.load( File.open("marshalled.object") )
  - [x] "Instance Variables¶ ↑"
  - [x] "Extended¶ ↑"
  - [x] "Array¶ ↑"
- - [ ] "Bignum¶ ↑"
+ - [x] "Bignum¶ ↑"
  - [ ] "Class and Module¶ ↑"
  - [ ] "Data¶ ↑"
  - [x] "Float¶ ↑"

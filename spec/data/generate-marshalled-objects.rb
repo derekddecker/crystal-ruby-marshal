@@ -59,6 +59,7 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-float.out'), 'wb') { 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-float-infinity.out'), 'wb') { |f| f.write(Marshal.dump(Float::INFINITY)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-float-negative-infinity.out'), 'wb') { |f| f.write(Marshal.dump(-Float::INFINITY)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-float-nan.out'), 'wb') { |f| f.write(Marshal.dump(Float::NAN)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-bignum.out'), 'wb') { |f| f.write(Marshal.dump(123456789 ** 4)) }
 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-string.out'), 'w') { |f| f.write(Marshal.dump("test_string")) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-symbol.out'), 'w') { |f| f.write(Marshal.dump(:test_symbol)) }

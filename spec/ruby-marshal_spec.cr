@@ -164,6 +164,15 @@ describe Ruby::Marshal do
 		object.data.as(::Float64).nan?.should eq(true)
 	end
 
+	it "should read a marshalled BigNum" do
+		puts
+		puts `xxd #{SPEC_ROOT}/data/marshalled-bignum.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-bignum.out" ) )
+		object.should be_a(Ruby::Marshal::BigNum)
+		object.data.should be_a(::Bytes)
+		object.stream_size.should eq(17)
+	end
+
 	it "should read a marshalled symbol" do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-symbol.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-symbol.out" ) )
@@ -219,8 +228,7 @@ describe Ruby::Marshal do
 	end
 
 	it "should read a marshalled object with modules" do
-		puts
-		puts `xxd #{SPEC_ROOT}/data/marshalled-object-extended.out`
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-object-extended.out`
 		user = Ruby::Marshal.load( ExtendedUser, File.read( "#{SPEC_ROOT}/data/marshalled-object-extended.out" ) )
 		user.id.should eq(2)
 	end

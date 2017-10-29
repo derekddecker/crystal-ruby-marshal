@@ -5,7 +5,7 @@ module Ruby::Marshal
 	class Array < StreamObject
 
 		getter :data
-    alias RubyStreamArray = StreamObject | ::Float64 | ::Bool | ::Int32 | ::String | ::Nil | ::Array(RubyStreamArray) | ::Hash(StreamObject, StreamObject)
+    alias RubyStreamArray = StreamObject | ::Bytes | ::Float64 | ::Bool | ::Int32 | ::String | ::Nil | ::Array(RubyStreamArray) | ::Hash(StreamObject, StreamObject)
     @data : RubyStreamArray
     @num_objects : Int32
 
