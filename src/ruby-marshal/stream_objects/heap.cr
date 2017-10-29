@@ -5,13 +5,21 @@ module Ruby::Marshal
 	class Heap
 
 		@@sym_heap = ::Array(Symbol).new
-		@@obj_heap = ::Array(String | Array).new
+		@@obj_heap = ::Array(String | Array | StreamObject).new
 
 		def self.add(symbol : Symbol)
 			@@sym_heap << symbol
 		end
 
+		def self.add(object : ::Ruby::Marshal::ObjectObject)
+			@@obj_heap << object
+		end
+
 		def self.add(object : ::Ruby::Marshal::String)
+			@@obj_heap << object
+		end
+
+		def self.add(object : ::Ruby::Marshal::InstanceObject)
 			@@obj_heap << object
 		end
 
@@ -24,7 +32,7 @@ module Ruby::Marshal
 		end
 
 		def self.get_obj(index : Int32)
-			@@obj_heap[index]
+			@@obj_heap[index - 1]
 		end
 
 		def self.init

@@ -9,7 +9,7 @@ module Ruby::Marshal
 
 		def initialize(stream : Bytes)
 			super(Int32.new(0x00))
-			@data = true
+			@data = false
 		end
 
 		def read(stream : Bytes)

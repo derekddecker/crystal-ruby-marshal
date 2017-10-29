@@ -141,24 +141,39 @@ describe Ruby::Marshal do
 	end
 
 	it "should read a marshalled symbol" do
-		puts `xxd #{SPEC_ROOT}/data/marshalled-symbol.out`
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-symbol.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-symbol.out" ) )
 		object.should be_a(Ruby::Marshal::Symbol)
 		object.data.should eq("test_symbol")
 	end
 
 	it "should read a marshalled symbol array" do
-		puts `xxd #{SPEC_ROOT}/data/marshalled-symbol-array.out`
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-symbol-array.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-symbol-array.out" ) )
 		object.should be_a(Ruby::Marshal::Array)
 		object.data.should eq(["hello", "hello"])
 	end
 
 	it "should read a marshalled complex array" do
-		puts `xxd #{SPEC_ROOT}/data/marshalled-complex-array.out`
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-complex-array.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-complex-array.out" ) )
 		object.should be_a(Ruby::Marshal::Array)
 		object.data.should eq(["hello", "hello", ["hello", "test", 1, nil], 1_000_000, true, false, nil, "string", "string"])
+	end
+
+	it "should read a marshalled string" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-string.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-string.out" ) )
+		object.should be_a(Ruby::Marshal::InstanceObject)
+		object.data.should eq("test_string")
+	end
+
+	it "should read a marshalled object" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-valid.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-valid.out" ) )
+		puts object.inspect
+		#object.should be_a(Ruby::Marshal::InstanceObject)
+		#object.data.should eq("test_string")
 	end
 
 end

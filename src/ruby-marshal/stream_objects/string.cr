@@ -9,7 +9,7 @@ module Ruby::Marshal
 		def initialize(stream : Bytes)
 			@data = ""
 			string_length = IntegerStreamObject.get(stream)
-      super(string_length.stream_size)
+      super(string_length.data)
 			stream += string_length.size
 			read(stream)
 			Heap.add(self)

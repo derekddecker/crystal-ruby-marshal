@@ -17,6 +17,8 @@ module Ruby::Marshal
 				when Int8.new(59); SymbolPointer.new(stream)
 				when Int8.new(84); TrueStreamObject.new(stream)
 				when Int8.new(91); Array.new(stream)
+				when Int8.new(73); InstanceObject.new(stream)
+				when Int8.new(111); ObjectObject.new(stream)
 				else return NullStreamObject.new(stream)
 			end
 		end

@@ -12,6 +12,8 @@ require "./stream_objects/three_byte_negative_int"
 require "./stream_objects/four_byte_positive_int"
 require "./stream_objects/four_byte_negative_int"
 
+require "./stream_objects/instance_object"
+require "./stream_objects/object_object"
 require "./stream_objects/object_pointer"
 require "./stream_objects/symbol"
 require "./stream_objects/symbol_pointer"
