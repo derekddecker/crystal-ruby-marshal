@@ -41,7 +41,7 @@ Ruby::Marshal.load( File.open("marshalled.object") )
  - [x] "Symbols and Byte Sequence¶ ↑"
  - [x] "Object References¶ ↑"
  - [x] "Instance Variables¶ ↑"
- - [ ] "Extended¶ ↑"
+ - [x] "Extended¶ ↑"
  - [x] "Array¶ ↑"
  - [ ] "Bignum¶ ↑"
  - [ ] "Class and Module¶ ↑"
