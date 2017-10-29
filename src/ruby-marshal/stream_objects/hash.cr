@@ -79,7 +79,7 @@ module Ruby::Marshal
 			end
 			@data.each do |(k, v)|
 				key = (k.class == Ruby::Marshal::Hash) ? k.as(Hash).raw_hash : k.data
-				value = (k.class == Ruby::Marshal::Hash) ? v.as(Hash).raw_hash : v.data
+				value = (v.class == Ruby::Marshal::Hash) ? v.as(Hash).raw_hash : v.data
 				raw_hash[key] = value
 			end
 			raw_hash
