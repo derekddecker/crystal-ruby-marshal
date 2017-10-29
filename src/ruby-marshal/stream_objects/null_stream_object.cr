@@ -12,6 +12,11 @@ module Ruby::Marshal
 			@data = nil
 		end
 
+		def initialize
+      super(Int32.new(0x00))
+			@data = nil
+		end
+
 		def read(stream : Bytes)
 			# noop
 		end

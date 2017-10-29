@@ -176,4 +176,10 @@ describe Ruby::Marshal do
 		#object.data.should eq("test_string")
 	end
 
+	it "should read a marshalled hash" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-hash.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-hash.out" ) )
+		object.as(::Ruby::Marshal::Hash)["simple"].data.should eq("hash")
+	end
+
 end

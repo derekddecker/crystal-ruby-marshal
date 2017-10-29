@@ -5,7 +5,7 @@ module Ruby::Marshal
 
 	class ObjectPointer < StreamObject
 
-    alias RubyStreamObjects = StreamObject | ::Bool | ::Int32 | ::String | ::Nil | ::Array(Ruby::Marshal::Array::RubyStreamArray)
+    alias RubyStreamObjects = StreamObject | ::Bool | ::Int32 | ::String | ::Nil | ::Array(Ruby::Marshal::Array::RubyStreamArray) | ::Hash(Ruby::Marshal::StreamObject, Ruby::Marshal::StreamObject)
     @data : RubyStreamObjects
 		getter :data
 

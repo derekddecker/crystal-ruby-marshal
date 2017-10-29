@@ -16,7 +16,7 @@ module Ruby::Marshal
 		getter :data
 		@class_name : Symbol
 		@num_instance_variables : IntegerStreamObject
-		@instance_variables : Hash(::String, StreamObject)
+		@instance_variables : ::Hash(::String, StreamObject)
 
 		def initialize(stream : Bytes)
       super(0x00)
@@ -24,7 +24,7 @@ module Ruby::Marshal
 			@data = NullStreamObject.new(stream)
 			stream += @class_name.stream_size
 			@num_instance_variables = IntegerStreamObject.get(stream)
-			@instance_variables = Hash(::String, StreamObject).new
+			@instance_variables = ::Hash(::String, StreamObject).new
 			stream += @num_instance_variables.size
 			@size = @num_instance_variables.size + @class_name.stream_size
 			read(stream)

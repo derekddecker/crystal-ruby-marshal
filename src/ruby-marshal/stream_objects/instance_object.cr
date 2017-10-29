@@ -13,14 +13,14 @@ module Ruby::Marshal
 
 		getter :data
 		@num_instance_variables : IntegerStreamObject
-		@instance_variables : Hash(::String, StreamObject)
+		@instance_variables : ::Hash(::String, StreamObject)
 
 		def initialize(stream : Bytes)
       super(0x00)
 			@data = StreamObjectFactory.get(stream)
 			stream += 1 + @data.as(Ruby::Marshal::StreamObject).stream_size
 			@num_instance_variables = IntegerStreamObject.get(stream)
-			@instance_variables = Hash(::String, StreamObject).new
+			@instance_variables = ::Hash(::String, StreamObject).new
 			@size = 1 + @data.as(Ruby::Marshal::StreamObject).stream_size + @num_instance_variables.size
 			stream += @num_instance_variables.size
 			read(stream)
@@ -44,10 +44,6 @@ module Ruby::Marshal
 
 		def data
 			@data.data
-		end
-
-		def stream_size
-			@size + 1
 		end
 
 	end
