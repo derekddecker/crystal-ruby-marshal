@@ -206,4 +206,13 @@ describe Ruby::Marshal do
 		object.as(::Ruby::Marshal::Hash)["simple"].data.should eq("hash")
 	end
 
+	it "should read a marshalled hash with a default" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-hash-with-default.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-hash-with-default.out" ) ).as(Ruby::Marshal::Hash)
+		object["key"].data.should eq(1)
+		object.default_value.data.should eq("default_value")
+		raw_hash = object.raw_hash
+		raw_hash["new_key"].should eq("default_value")
+	end
+
 end

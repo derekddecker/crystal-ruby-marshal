@@ -47,3 +47,6 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-symbol.out'), 'w') { 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-symbol-array.out'), 'w') { |f| f.write(Marshal.dump([:hello, :hello])) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-complex-array.out'), 'w') { |f| f.write(Marshal.dump([:hello, :hello, [:hello, :test, 1, nil],1_000_000, true, false, nil, "string", "string"])) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-hash.out'), 'w') { |f| f.write(Marshal.dump({:simple => 'hash'})) }
+hash_with_default = Hash.new("default_value")
+hash_with_default['key'] = 1
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-hash-with-default.out'), 'w') { |f| f.write(Marshal.dump(hash_with_default)) }

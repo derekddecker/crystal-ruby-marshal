@@ -1,5 +1,6 @@
 require "./stream_object"
 require "./array"
+require "./object_pointer"
 
 module Ruby::Marshal
 
@@ -12,12 +13,16 @@ module Ruby::Marshal
 	# For a Hash with a default value, the default value follows 
 	# all the pairs.
 	class Hash < StreamObject
+		
+    alias RawHashObjects = StreamObject | ::Bool | ::Int32 | ::String | ::Nil | ::Array(Ruby::Marshal::Array::RubyStreamArray) | ::Hash(Ruby::Marshal::StreamObject, Ruby::Marshal::StreamObject) | ::Float64 | ::Hash(RawHashObjects, RawHashObjects)
 
-		getter :data
+		getter :data, :default_value
 		@data : ::Hash(StreamObject, StreamObject)
 		@num_keys : Integer
+		@default_value : StreamObject | Null
 
 		def initialize(stream : Bytes)
+			@default_value = Null.new
 			@num_keys = Integer.get(stream)
 			@data = ::Hash(StreamObject, StreamObject).new
 			stream += @num_keys.size
@@ -39,6 +44,7 @@ module Ruby::Marshal
 				@data[instance_var_name] = instance_var_value
 				i += 1
 			end
+			return stream
 		end
 
 		def each(&block)
@@ -64,6 +70,20 @@ module Ruby::Marshal
 
 		add_hash_accessor ::String
 		add_hash_accessor ::Int32
+
+		def raw_hash
+			unless @default_value.data.nil?
+				raw_hash = ::Hash(RawHashObjects, RawHashObjects).new { @default_value.data }
+			else
+				raw_hash = ::Hash(RawHashObjects, RawHashObjects).new 
+			end
+			@data.each do |(k, v)|
+				key = (k.class == Ruby::Marshal::Hash) ? k.as(Hash).raw_hash : k.data
+				value = (k.class == Ruby::Marshal::Hash) ? v.as(Hash).raw_hash : v.data
+				raw_hash[key] = value
+			end
+			raw_hash
+		end
 
 	end
 
