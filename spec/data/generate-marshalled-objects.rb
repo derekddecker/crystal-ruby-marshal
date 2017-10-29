@@ -1,15 +1,30 @@
 #!/usr/bin/env ruby
-#
+
+module TestModule
+	def test_method
+		return 1
+	end
+end
+
 class User
 	attr_accessor :id, :name, :valid, :data
 end
 
-player = User.new
-player.id = 1
-player.name = 'Test'
-player.valid = true
-player.data = { :some => true, 1 => 'extra', { :key => 1 } => 0x01 }
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-valid.out'), 'w') { |f| f.write(Marshal.dump(player)) }
+class ExtendedUser
+	extend TestModule
+	attr_accessor :id
+end
+
+user = User.new
+user.id = 1
+user.name = 'Test'
+user.valid = true
+user.data = { :some => true, 1 => 'extra', { :key => 1 } => 0x01 }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-valid.out'), 'w') { |f| f.write(Marshal.dump(user)) }
+
+extended_user = ExtendedUser.new
+extended_user.id = 2
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-object-extended.out'), 'w') { |f| f.write(Marshal.dump(extended_user)) }
 
 bad_version = ["00000100", "00001001"].map { |i| i.to_i(2).chr }.join
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-invalid-version.out'), 'wb') { |f| f.write(bad_version) }
@@ -41,6 +56,9 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-in
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-16_777_217)) }
 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-float.out'), 'wb') { |f| f.write(Marshal.dump(-1.67320495432149)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-float-infinity.out'), 'wb') { |f| f.write(Marshal.dump(Float::INFINITY)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-float-negative-infinity.out'), 'wb') { |f| f.write(Marshal.dump(-Float::INFINITY)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-float-nan.out'), 'wb') { |f| f.write(Marshal.dump(Float::NAN)) }
 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-string.out'), 'w') { |f| f.write(Marshal.dump("test_string")) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-symbol.out'), 'w') { |f| f.write(Marshal.dump(:test_symbol)) }

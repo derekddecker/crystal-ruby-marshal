@@ -71,7 +71,7 @@ module Ruby::Marshal
 		add_hash_accessor ::String
 		add_hash_accessor ::Int32
 
-		def raw_hash
+		def raw_hash : ::Hash(RawHashObjects, RawHashObjects)
 			unless @default_value.data.nil?
 				raw_hash = ::Hash(RawHashObjects, RawHashObjects).new { @default_value.data }
 			else

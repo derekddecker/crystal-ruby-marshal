@@ -43,6 +43,7 @@ module Ruby::Marshal
 				@instance_variables[instance_var_name.data.as(::String)] = instance_var_value
 				i += 1
 			end
+			return stream
 		end
 
 		def populate_class(klass : ::Object)
@@ -51,8 +52,16 @@ module Ruby::Marshal
 
 		def read_attr(name : ::String, raw = false)
 			key = @instance_variables.has_key?(name) ? name : "@#{name}"
-			result = @instance_variables.has_key?(key) ? @instance_variables[key] : nil
-			return (raw && !result.nil?) ? result.data : result
+			attr = @instance_variables.has_key?(key) ? @instance_variables[key] : nil
+			if(raw && !attr.nil?) 
+				if (attr.is_a?(::Hash))
+					return attr.raw_hash
+				else
+					return attr.data 
+				end
+			else
+				return attr
+			end
 		end
 		
 		def read_raw_attr(name : ::String)
@@ -63,3 +72,26 @@ module Ruby::Marshal
 
 end
 
+macro ruby_marshal_properties(prop_hash)
+
+	{% for prop, klass in prop_hash %}
+		@{{ prop.id }} : {{ klass }}
+	
+		def read_ruby_marshalled_{{ prop.id }}(marshalled_object : ::Ruby::Marshal::Object) : {{klass}} 
+			marshalled_object.read_raw_attr("{{ prop.id }}").as({{ klass }})
+		end
+	{% end %}
+
+	def initialize(marshalled_object : ::Ruby::Marshal::Object)
+		{% for prop, klass in prop_hash %}
+			@{{ prop.id }} = read_ruby_marshalled_{{ prop.id }}(marshalled_object).as({{ klass }})
+		{% end %}
+	end
+
+end
+
+macro ruby_marshal_initialize(prop_hash)
+	{% for prop, klass in prop_hash %}
+		@{{ prop.id }} = read_ruby_marshalled_{{ prop.id }}(marshalled_object).as({{ klass }})
+	{% end %}
+end

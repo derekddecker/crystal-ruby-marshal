@@ -146,6 +146,24 @@ describe Ruby::Marshal do
 		object.data.should eq(-1.67320495432149)
 	end
 
+	it "should read a marshalled float infinity" do
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-float-infinity.out" ) )
+		object.should be_a(Ruby::Marshal::Float)
+		object.data.should eq(Float64::INFINITY)
+	end
+
+	it "should read a marshalled float negative infinity" do
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-float-negative-infinity.out" ) )
+		object.should be_a(Ruby::Marshal::Float)
+		object.data.should eq(-Float64::INFINITY)
+	end
+
+	it "should read a marshalled float nan" do
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-float-nan.out" ) )
+		object.should be_a(Ruby::Marshal::Float)
+		object.data.as(::Float64).nan?.should eq(true)
+	end
+
 	it "should read a marshalled symbol" do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-symbol.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-symbol.out" ) )
@@ -190,7 +208,7 @@ describe Ruby::Marshal do
 		end
 	end
 
-	it "should read a marshalled into a provided class" do
+	it "should read a marshalled object into a provided class" do
 		user = Ruby::Marshal.load( User, File.read( "#{SPEC_ROOT}/data/marshalled-valid.out" ) )
 		user.id.should eq(1)
 		user.name.should eq("Test")
@@ -198,6 +216,13 @@ describe Ruby::Marshal do
 		user.data["some"].should eq(true)
 		user.data[1].should eq("extra")
 		user.data[{"key" => 1}].should eq(0x01)
+	end
+
+	it "should read a marshalled object with modules" do
+		puts
+		puts `xxd #{SPEC_ROOT}/data/marshalled-object-extended.out`
+		user = Ruby::Marshal.load( ExtendedUser, File.read( "#{SPEC_ROOT}/data/marshalled-object-extended.out" ) )
+		user.id.should eq(2)
 	end
 
 	it "should read a marshalled hash" do
