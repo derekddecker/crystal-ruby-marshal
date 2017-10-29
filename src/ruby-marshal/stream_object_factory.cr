@@ -19,6 +19,7 @@ module Ruby::Marshal
 				when Int8.new(91); Array.new(stream)
 				when Int8.new(73); InstanceObject.new(stream)
 				when Int8.new(111); Object.new(stream)
+				when Int8.new(102); Float.new(stream)
 				when Int8.new(123), Int8.new(125); Hash.new(stream)
 				else return Null.new(stream)
 			end

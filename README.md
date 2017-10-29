@@ -46,7 +46,7 @@ Ruby::Marshal.load( File.open("marshalled.object") )
  - [ ] "Bignum¶ ↑"
  - [ ] "Class and Module¶ ↑"
  - [ ] "Data¶ ↑"
- - [ ] "Float¶ ↑"
+ - [x] "Float¶ ↑"
  - [x] "Hash and Hash with Default Value¶ ↑"
  - [ ] "Module and Old Module¶ ↑"
  - [x] "Object¶ ↑" 

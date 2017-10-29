@@ -40,6 +40,8 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-positive-four-byte-in
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-1_073_741_824)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-four-byte-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-16_777_217)) }
 
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-float.out'), 'wb') { |f| f.write(Marshal.dump(-1.67320495432149)) }
+
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-string.out'), 'w') { |f| f.write(Marshal.dump("test_string")) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-symbol.out'), 'w') { |f| f.write(Marshal.dump(:test_symbol)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-symbol-array.out'), 'w') { |f| f.write(Marshal.dump([:hello, :hello])) }
