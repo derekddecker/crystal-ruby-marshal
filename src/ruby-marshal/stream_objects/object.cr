@@ -15,15 +15,15 @@ module Ruby::Marshal
 
 		getter :data
 		@class_name : Symbol
-		@num_instance_variables : IntegerStreamObject
+		@num_instance_variables : Integer
 		@instance_variables : ::Hash(::String, StreamObject)
 
 		def initialize(stream : Bytes)
       super(0x00)
 			@class_name = StreamObjectFactory.get(stream).as(Symbol)
-			@data = NullStreamObject.new(stream)
+			@data = Null.new(stream)
 			stream += @class_name.stream_size
-			@num_instance_variables = IntegerStreamObject.get(stream)
+			@num_instance_variables = Integer.get(stream)
 			@instance_variables = ::Hash(::String, StreamObject).new
 			stream += @num_instance_variables.size
 			@size = @num_instance_variables.size + @class_name.stream_size

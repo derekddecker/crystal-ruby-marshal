@@ -1,8 +1,8 @@
-require "./integer_stream_object"
+require "./integer"
 
 module Ruby::Marshal
 
-	class FourByteNegativeInt < IntegerStreamObject
+	class FourByteNegativeInt < Integer
 
 		def initialize(stream : Bytes)
 			super(Int32.new(0x04))

@@ -15,10 +15,10 @@ module Ruby::Marshal
 
 		getter :data
 		@data : ::Hash(StreamObject, StreamObject)
-		@num_keys : IntegerStreamObject
+		@num_keys : Integer
 
 		def initialize(stream : Bytes)
-			@num_keys = IntegerStreamObject.get(stream)
+			@num_keys = Integer.get(stream)
 			@data = ::Hash(StreamObject, StreamObject).new
 			stream += @num_keys.size
 			super(@num_keys.size)
@@ -49,7 +49,7 @@ module Ruby::Marshal
 
 		macro add_hash_accessor(klass)
 			def [](requested_key : {{klass}})
-				result = NullStreamObject.new
+				result = Null.new
 				@data.each do |(k, v)|
 					if(k.data.class == {{klass}})
 						if k.data.as({{klass}}) == requested_key

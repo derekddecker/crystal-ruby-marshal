@@ -1,4 +1,5 @@
 require "./stream_object"
+require "./integer"
 
 module Ruby::Marshal
 
@@ -8,7 +9,7 @@ module Ruby::Marshal
 
 		def initialize(stream : Bytes)
 			@data = ""
-			symbol_length = IntegerStreamObject.get(stream)
+			symbol_length = Integer.get(stream)
 			@symbol_length = symbol_length.size.as(Int32)
       super(symbol_length.data)
 			stream += @symbol_length

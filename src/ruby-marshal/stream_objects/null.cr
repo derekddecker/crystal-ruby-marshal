@@ -2,7 +2,7 @@ require "./stream_object"
 
 module Ruby::Marshal
 
-	class NullStreamObject < StreamObject
+	class Null < StreamObject
 
 		getter :data
     @data : ::Nil

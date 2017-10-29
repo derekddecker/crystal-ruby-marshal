@@ -3,7 +3,7 @@ require "./stream_object"
 module Ruby::Marshal
 
 
-	abstract class IntegerStreamObject < StreamObject
+	abstract class Integer < StreamObject
 
     @data : Int32
     getter :data

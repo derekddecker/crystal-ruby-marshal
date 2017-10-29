@@ -2,7 +2,7 @@ require "./stream_object"
 
 module Ruby::Marshal
 
-	class FalseStreamObject < StreamObject
+	class False < StreamObject
 
 		@data : Bool
 		getter :data

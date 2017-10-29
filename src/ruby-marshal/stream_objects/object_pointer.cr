@@ -11,7 +11,7 @@ module Ruby::Marshal
 
 		def initialize(stream : Bytes)
 			@data = ""
-			pointer_index = IntegerStreamObject.get(stream)
+			pointer_index = Integer.get(stream)
       super(pointer_index.stream_size)
 			@heap_index = Int32.new(pointer_index.data)
 			read(stream)

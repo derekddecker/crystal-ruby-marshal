@@ -10,7 +10,7 @@ module Ruby::Marshal
     @num_objects : Int32
 
 		def initialize(stream : Bytes)
-			array_length = IntegerStreamObject.get(stream)
+			array_length = Integer.get(stream)
       @num_objects = array_length.data
       @data = ::Array(RubyStreamArray).new(@num_objects)
 			super(array_length.size)
