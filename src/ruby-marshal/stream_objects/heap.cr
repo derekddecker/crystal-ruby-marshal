@@ -11,7 +11,7 @@ module Ruby::Marshal
 			@@sym_heap << symbol
 		end
 
-		def self.add(object : ::Ruby::Marshal::ObjectObject)
+		def self.add(object : ::Ruby::Marshal::Object)
 			@@obj_heap << object
 		end
 

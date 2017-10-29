@@ -41,16 +41,29 @@ module Ruby::Marshal
 			end
 		end
 
-		def [](requested_key : ::String)
-			result = NullStreamObject.new
-			@data.each do |(k, v)| 
-				if k.data.as(::String) == requested_key
-					result = v 
-					break
-				 end
+		def each(&block)
+			@data.each do |kv|
+				yield kv
 			end
-			return result
 		end
+
+		macro add_hash_accessor(klass)
+			def [](requested_key : {{klass}})
+				result = NullStreamObject.new
+				@data.each do |(k, v)|
+					if(k.data.class == {{klass}})
+						if k.data.as({{klass}}) == requested_key
+							result = v 
+							break
+						 end
+					end
+				end
+				return result
+			end
+		end
+
+		add_hash_accessor ::String
+		add_hash_accessor ::Int32
 
 	end
 

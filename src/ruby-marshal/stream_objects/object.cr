@@ -11,7 +11,7 @@ module Ruby::Marshal
 
 	# The keys in the pairs must be symbols containing instance 
 	# variable names.
-	class ObjectObject < StreamObject
+	class Object < StreamObject
 
 		getter :data
 		@class_name : Symbol
@@ -31,7 +31,6 @@ module Ruby::Marshal
 			Heap.add(self)
 		end
 
-		# instantiate the class if it exists and assign to @data
 		def read(stream : Bytes)
 			i = 0
 			while(i < @num_instance_variables.data)
@@ -44,6 +43,20 @@ module Ruby::Marshal
 				@instance_variables[instance_var_name.data.as(::String)] = instance_var_value
 				i += 1
 			end
+		end
+
+		def populate_class(klass : ::Object)
+			klass.new(self)
+		end
+
+		def read_attr(name : ::String, raw = false)
+			key = @instance_variables.has_key?(name) ? name : "@#{name}"
+			result = @instance_variables.has_key?(key) ? @instance_variables[key] : nil
+			return (raw && !result.nil?) ? result.data : result
+		end
+		
+		def read_raw_attr(name : ::String)
+			read_attr(name, true)
 		end
 
 	end

@@ -13,6 +13,14 @@ module Ruby::Marshal
     self.load(source.gets_to_end)
 	end
 
+	def self.load(klass : ::Class, source : ::String)
+		klass.new( self._load(source.to_slice).as(Ruby::Marshal::Object) )
+	end
+
+	def self.load(klass : ::Class, source : IO)
+		klass.new( self._load(source.gets_to_end).as(Ruby::Marshal::Object) )
+	end
+
 	# The first two bytes of the stream contain the major and minor version, each as
 	# a single byte encoding a digit. The version implemented in Ruby is 4.8 (stored
 	# as “x04x08”) and is supported by ruby 1.8.0 and newer.

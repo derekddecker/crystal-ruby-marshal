@@ -170,10 +170,28 @@ describe Ruby::Marshal do
 
 	it "should read a marshalled object" do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-valid.out`
-		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-valid.out" ) )
-		puts object.inspect
-		#object.should be_a(Ruby::Marshal::InstanceObject)
-		#object.data.should eq("test_string")
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-valid.out" ) ).as(::Ruby::Marshal::Object)
+		object.read_attr("id", true).should eq(1)
+		object.read_attr("name", true).should eq("Test")
+		object.read_attr("valid", true).should eq(true)
+		data_hash = object.read_attr("data").as(Ruby::Marshal::Hash)
+		data_hash["some"].data.should eq(true)
+		data_hash[1].data.should eq("extra")
+		data_hash.data.each do |(k, v)| 
+			if(k.class == Ruby::Marshal::Hash)
+				v.data.should eq(0x01)
+			end
+		end
+	end
+
+	it "should read a marshalled into a provided class" do
+		user = Ruby::Marshal.load( User, File.read( "#{SPEC_ROOT}/data/marshalled-valid.out" ) )
+		user.id.should eq(1)
+		user.name.should eq("Test")
+		user.valid.should eq(true)
+		user.data["some"].should eq(true)
+		user.data[1].should eq("extra")
+		user.data[{"key" => 1}].should eq(0x01)
 	end
 
 	it "should read a marshalled hash" do
