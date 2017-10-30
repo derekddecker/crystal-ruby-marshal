@@ -24,6 +24,8 @@ require "./stream_objects/true"
 require "./stream_objects/false"
 require "./stream_objects/hash"
 require "./stream_objects/hash_with_default"
+require "./stream_objects/class"
+require "./stream_objects/module"
 
 require "./stream_objects/heap"
 require "./stream_object_factory"

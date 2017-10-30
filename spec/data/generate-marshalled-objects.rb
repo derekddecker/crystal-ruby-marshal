@@ -69,3 +69,6 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-hash.out'), 'w') { |f
 hash_with_default = Hash.new("default_value")
 hash_with_default['key'] = 1
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-hash-with-default.out'), 'w') { |f| f.write(Marshal.dump(hash_with_default)) }
+
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-class.out'), 'w') { |f| f.write(Marshal.dump(User)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-module.out'), 'w') { |f| f.write(Marshal.dump(TestModule)) }

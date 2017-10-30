@@ -24,6 +24,8 @@ module Ruby::Marshal
 				when Int8.new(123); Hash.new(stream)
 				when Int8.new(125); HashWithDefault.new(stream)
 				when Int8.new(108); BigNum.new(stream)
+				when Int8.new(99); Class.new(stream)
+				when Int8.new(109); Module.new(stream)
 				else return Null.new(stream)
 			end
 		end

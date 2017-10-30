@@ -165,8 +165,7 @@ describe Ruby::Marshal do
 	end
 
 	it "should read a marshalled BigNum" do
-		puts
-		puts `xxd #{SPEC_ROOT}/data/marshalled-bignum.out`
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-bignum.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-bignum.out" ) )
 		object.should be_a(Ruby::Marshal::BigNum)
 		object.data.should be_a(::Bytes)
@@ -246,6 +245,20 @@ describe Ruby::Marshal do
 		object.default_value.data.should eq("default_value")
 		raw_hash = object.raw_hash
 		raw_hash["new_key"].should eq("default_value")
+	end
+
+	it "should read a marshalled class" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-class.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-class.out" ) )
+		object.should be_a(Ruby::Marshal::Class)
+		::String.new(object.data.as(::Bytes)).should eq("User")
+	end
+
+	it "should read a marshalled module" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-module.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-module.out" ) )
+		object.should be_a(Ruby::Marshal::Module)
+		::String.new(object.data.as(::Bytes)).should eq("TestModule")
 	end
 
 end
