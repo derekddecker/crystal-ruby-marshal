@@ -1,3 +1,5 @@
+require "./stream_objects/integer"
+require "./stream_objects/byte_sequence"
 require "./stream_objects/zero_byte_int"
 require "./stream_objects/one_byte_int"
 require "./stream_objects/one_byte_positive_int"
@@ -26,6 +28,7 @@ require "./stream_objects/hash"
 require "./stream_objects/hash_with_default"
 require "./stream_objects/class"
 require "./stream_objects/module"
+require "./stream_objects/regex"
 
 require "./stream_objects/heap"
 require "./stream_object_factory"

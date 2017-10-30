@@ -14,7 +14,7 @@ module Ruby::Marshal
 	# all the pairs.
 	class Hash < StreamObject
 		
-    alias RawHashObjects = StreamObject | ::Bytes | ::Bool | ::Int32 | ::String | ::Nil | ::Array(Ruby::Marshal::Array::RubyStreamArray) | ::Hash(Ruby::Marshal::StreamObject, Ruby::Marshal::StreamObject) | ::Float64 | ::Hash(RawHashObjects, RawHashObjects)
+    alias RawHashObjects = StreamObject | ::Regex | ::Bytes | ::Bool | ::Int32 | ::String | ::Nil | ::Array(Ruby::Marshal::Array::RubyStreamArray) | ::Hash(Ruby::Marshal::StreamObject, Ruby::Marshal::StreamObject) | ::Float64 | ::Hash(RawHashObjects, RawHashObjects)
 
 		getter :data, :default_value
 		@data : ::Hash(StreamObject, StreamObject)

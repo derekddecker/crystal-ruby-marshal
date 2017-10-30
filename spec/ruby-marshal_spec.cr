@@ -261,4 +261,13 @@ describe Ruby::Marshal do
 		::String.new(object.data.as(::Bytes)).should eq("TestModule")
 	end
 
+	it "should read a marshalled regex" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-regex.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-regex.out" ) )
+		object.data.should be_a(::Regex)
+		regex = object.data.as(::Regex)
+		regex.match("ASDasd0045").should_not eq(nil)
+		regex.match("'asdf'").should eq(nil)
+	end
+
 end

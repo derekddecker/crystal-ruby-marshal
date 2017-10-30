@@ -49,7 +49,7 @@ Ruby::Marshal.load( File.open("marshalled.object") )
  - [x] "Float¶ ↑"
  - [x] "Hash and Hash with Default Value¶ ↑"
  - [x] "Object¶ ↑" 
- - [ ] "Regular Expression¶ ↑"
+ - [x] "Regular Expression¶ ↑"
  - [x] "String¶ ↑"
  - [ ] "Struct¶ ↑"
  - [ ] "User Class¶ ↑"
