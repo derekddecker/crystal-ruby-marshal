@@ -125,13 +125,165 @@ puts obj.data.inspect
 ```
 
 #### Class and Module
+```sh
+$ xxd marshalled-class.out
+0000000: 0408 6309 5573 6572                      ..c.User
+
+$ xxd marshalled-module.out
+0000000: 0408 6d0f 5465 7374 4d6f 6475 6c65       ..m.TestModule
+```
+
+```crystal
+# Class
+obj = Ruby::Marshal.load( File.read("marshalled-class.out") )
+#=> #<Ruby::Marshal::Class:0x1097d8f00>
+puts obj.data.inspect
+#=> "User"
+
+# Module
+obj = Ruby::Marshal.load( File.read("marshalled-module.out") )
+#=> #<Ruby::Marshal::Module:0x10d601ec0>
+puts obj.data.inspect
+#=> "TestModule"
+```
+
 #### Float
+```sh
+$ xxd marshalled-float.out
+0000000: 0408 6616 2d31 2e36 3733 3230 3439 3534  ..f.-1.673204954
+0000010: 3332 3134 39                             32149
+```
+
+```crystal
+obj = Ruby::Marshal.load( File.read("marshalled-float.out") )
+#=> #<Ruby::Marshal::Float:0x10071dec0>
+puts obj.data.inspect
+#=> -1.67320495432149
+```
+
 #### Hash and Hash with Default Value
+```sh
+```
+
+```crystal
+obj = Ruby::Marshal.load( File.read("marshalled-float.out") )
+#=> #<Ruby::Marshal::Float:0x10071dec0>
+puts obj.data.inspect
+#=> -1.67320495432149
+```
+
 #### Object
+`Ruby::Marshal.load(::Class, IO)` and `Ruby::Marshal.load(::Class, ::String)` are provided as convenience methods for unmarshalling straight into a Crystal object. Any class passed to these methods must implement `#initialize(obj : ::Ruby::Marshal::StreamObject` in order to read the marshalled data.
+
+The `ruby_marshal_properties` macro is provided as a convenience for simple marshalled objects. It will auto-unmarshal for you provided the correct schema for the data. 
+
+Unlike the other datatypes, `#data` in the case of objects will return a `Ruby::Marshall::Null` object. To use an unmarshalled object, case to `Ruby::Marshal::Object`. You can then reach the data by means of `#read_raw_attr(::String)` or `#read_attr(::String)`.
+
+```sh
+$ xxd marshalled-valid.out
+0000000: 0408 6f3a 0955 7365 7209 3a08 4069 6469  ..o:.User.:.@idi
+0000010: 063a 0a40 6e61 6d65 4922 0954 6573 7406  .:.@nameI".Test.
+0000020: 3a06 4554 3a0b 4076 616c 6964 543a 0a40  :.ET:.@validT:.@
+0000030: 6461 7461 7b08 3a09 736f 6d65 5469 0649  data{.:.someTi.I
+0000040: 220a 6578 7472 6106 3b08 547b 063a 086b  ".extra.;.T{.:.k
+0000050: 6579 6906 6906                           eyi.i.
+```
+
+```crystal
+obj = Ruby::Marshal.load( File.read("marshalled-valid.out") )
+#=> #<Ruby::Marshal::Object:0x10f393f00>
+puts obj.data.inspect
+#=> #<Ruby::Marshal::Null:0x104484fe0 @size=0, @data=nil>
+puts obj.as(Ruby::Marshal::Object).read_attr("id").inspect
+#=> #<Ruby::Marshal::OneByteInt:0x10be12fb0 @size=1, @data=1>
+puts obj.as(Ruby::Marshal::Object).read_raw_attr("name").inspect
+#=> "Test"
+
+# Or unmarshal straight into a Crystal object
+class User
+	property :id, :name
+
+	def initialize(object : Ruby::Marshal::StreamObject)
+		object = object.as(Ruby::Marshal::Object)
+		@id = object.read_raw_attr("id").as(::Int32)
+		@name = object.read_raw_attr("name").as(::String)
+	end
+end
+
+obj = Ruby::Marshal.load( User, File.read("marshalled-valid.out") )
+puts obj.inspect
+#=> #<User:0x10d5c85a0 @id=1, @name="Test">
+
+# As a convenience to setting these classes up, use the `ruby_marshal_properties` helper macro
+class User
+	property :id, :name
+	ruby_marshal_properties({ id: ::Int32, name: ::String })
+end
+```
+
 #### Regular Expression
+Contrary to the ruby documentation, ruby does not actually attach any Regex option data to the marshalled bytestream. Aside from that detail, the Regex source is unmarshalled as expected.
+
+```sh
+$ xxd marshalled-regex.out
+0000000: 0408 492f 135e 5b41 2d5a 612d 7a30 2d39  ..I/.^[A-Za-z0-9
+0000010: 5d2b 2407 063a 0645 46                   ]+$..:.EF
+```
+
+```crystal
+obj = Ruby::Marshal.load( File.read("marshalled-regex.out") )
+#=> #<Ruby::Marshal::InstanceObject:0x104db2f00>
+puts obj.data.inspect
+#=> /^[A-Za-z0-9]+$/
+obj.data.as(::Regex).match("howdyabc")
+#=> #<Regex::MatchData "howdyabc">
+```
+
 #### String
+```sh
+$ xxd marshalled-string.out
+0000000: 0408 4922 1074 6573 745f 7374 7269 6e67  ..I".test_string
+0000010: 063a 0645 54                             .:.ET
+```
+
+```crystal
+obj = Ruby::Marshal.load( File.read("marshalled-float.out") )
+#=> #<Ruby::Marshal::Float:0x10071dec0>
+puts obj.data.inspect
+#=> -1.67320495432149
+```
+
 #### Struct
+```sh
+$ xxd marshalled-struct.out
+0000000: 0408 533a 0d43 7573 746f 6d65 7209 3a09  ..S:.Customer.:.
+0000010: 6e61 6d65 4922 0944 6176 6506 3a06 4554  nameI".Dave.:.ET
+0000020: 3a0c 6164 6472 6573 7349 220d 3132 3320  :.addressI".123
+0000030: 4d61 696e 063b 0754 3a0a 7661 6c69 6446  Main.;.T:.validF
+0000040: 3a08 6167 6569 22                        :.agei"
+```
+
+```crystal
+obj = Ruby::Marshal.load( File.read("marshalled-float.out") )
+#=> #<Ruby::Marshal::Float:0x10071dec0>
+puts obj.data.inspect
+#=> -1.67320495432149
+```
+
 #### User Class
+```sh
+$ xxd marshalled-user-class.out
+0000000: 0408 433a 0d55 7365 7248 6173 687d 0649  ..C:.UserHash}.I
+0000010: 2209 6461 7461 063a 0645 5469 017b 6900  ".data.:.ETi.{i.
+```
+
+```crystal
+obj = Ruby::Marshal.load( File.read("marshalled-float.out") )
+#=> #<Ruby::Marshal::Float:0x10071dec0>
+puts obj.data.inspect
+#=> -1.67320495432149
+```
+
 
 ## Todo
  - [ ] Data

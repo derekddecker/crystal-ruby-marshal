@@ -254,14 +254,14 @@ describe Ruby::Marshal do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-class.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-class.out" ) )
 		object.should be_a(Ruby::Marshal::Class)
-		::String.new(object.data.as(::Bytes)).should eq("User")
+		object.data.as(::String).should eq("User")
 	end
 
 	it "should read a marshalled module" do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-module.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-module.out" ) )
 		object.should be_a(Ruby::Marshal::Module)
-		::String.new(object.data.as(::Bytes)).should eq("TestModule")
+		object.data.as(::String).should eq("TestModule")
 	end
 
 	it "should read a marshalled regex" do

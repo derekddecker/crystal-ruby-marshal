@@ -41,3 +41,4 @@ struct Customer
 		@age = obj.read_raw_attr("age").as(::Int32)
 	end
 end
+
