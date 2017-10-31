@@ -10,7 +10,7 @@ module Ruby::Marshal
 			case id
 				when Int8.new(105); Integer.get(stream)
 				when Int8.new(70); False.new(stream)
-				when Int8.new(0); Null.new(stream)
+				when Int8.new(48); Null.new(stream)
 				when Int8.new(64); ObjectPointer.new(stream)
 				when Int8.new(34); String.new(stream)
 				when Int8.new(58); Symbol.new(stream)
@@ -29,7 +29,7 @@ module Ruby::Marshal
 				when Int8.new(47); Regex.new(stream)
 				when Int8.new(83); Struct.new(stream)
 				when Int8.new(67); UserClass.new(stream)
-				else return Null.new(stream)
+				else raise InvalidMarshalData.new("Unknown type byte identifier: #{id}")
 			end
 		end
 

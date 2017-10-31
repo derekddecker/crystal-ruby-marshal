@@ -2,8 +2,9 @@ require "./spec_helper"
 
 describe Ruby::Marshal do
 
-  pending "#load IO" do
-		Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-valid.out" ) ) 
+  it "#load IO" do
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-valid.out" ) ).as(Ruby::Marshal::Object)
+		object.read_attr("name", true).should eq("Test")
   end
 
 	it "should raise an exception on invalid version" do
@@ -12,8 +13,10 @@ describe Ruby::Marshal do
 		end
 	end
 
-	pending "should raise an exception on invalid marshal data" do
-
+	it "should raise an exception on invalid marshal data" do
+		expect_raises(Ruby::Marshal::InvalidMarshalData) do
+			Ruby::Marshal.load( File.open( "#{SPEC_ROOT}/data/marshalled-invalid-data.out" ) )
+		end
 	end
 
 	it "should read a marshalled negative integer upper bound" do

@@ -21,12 +21,12 @@ dependencies:
 
 ## Usage
 
-Require it
+###Require it
 ```crystal
 require "ruby-marshal"
 ```
 
-Use it
+###Use it
 ```crystal
 # Load a marshalled ruby object from file
 Ruby::Marshal.load( File.read( "marshalled.object" ) )
@@ -35,26 +35,54 @@ Ruby::Marshal.load( File.read( "marshalled.object" ) )
 Ruby::Marshal.load( File.open("marshalled.object") )
 ```
 
+`Ruby::Marshal.load` will return a subclass of `Ruby::Marshal::StreamObject` which wraps the unmarshalled object. To access the underlying / raw crystal data structure, call `#data` on the `StreamObject`. See below for the particulars on a per-datatype basis.
+
+###Unmarshal type support:
+
+####true, false, nil
+```crystal
+# True
+obj = Ruby::Marshal.load("\u{04}\u{08}T")
+puts obj.inspect
+#=> #<Ruby::Marshal::True:0x10f0a7ff0>
+puts obj.data
+#=> true
+
+# False
+obj = Ruby::Marshal.load("\u{04}\u{08}F")
+puts obj.inspect
+#=> #<Ruby::Marshal::False:0x1096e9ff0>
+puts obj.data
+#=> false
+
+# nil
+obj = Ruby::Marshal.load("\u{04}\u{08}\u{30}")
+puts obj.inspect
+#=> #<Ruby::Marshal::Null:0x104682ff0> 
+puts obj.data
+#=> nil
+```
+
+####Fixnum and long
+####Symbols and Byte Sequence
+####Object References
+####Instance Variables
+####Extended
+####Array
+####Bignum
+####Class and Module
+####Float
+####Hash and Hash with Default Value
+####Object
+####Regular Expression
+####String
+####Struct
+####User Class
+
 ## Todo
- - [x] "true, false, nil¶ ↑"
- - [x] "Fixnum and long¶ ↑"
- - [x] "Symbols and Byte Sequence¶ ↑"
- - [x] "Object References¶ ↑"
- - [x] "Instance Variables¶ ↑"
- - [x] "Extended¶ ↑"
- - [x] "Array¶ ↑"
- - [x] "Bignum¶ ↑"
- - [x] "Class and Module¶ ↑"
- - [ ] "Data¶ ↑"
- - [x] "Float¶ ↑"
- - [x] "Hash and Hash with Default Value¶ ↑"
- - [x] "Object¶ ↑" 
- - [x] "Regular Expression¶ ↑"
- - [x] "String¶ ↑"
- - [x] "Struct¶ ↑"
- - [x] "User Class¶ ↑"
- - [ ] "User Defined¶ ↑"
- - [ ] "User Marshal¶ ↑"
+ - [ ] Data
+ - [ ] User Defined
+ - [ ] User Marshal
 
 ## Contributing
 
