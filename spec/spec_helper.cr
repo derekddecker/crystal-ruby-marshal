@@ -7,7 +7,8 @@ class User
 
 	property :id, :name, :valid, :data
 
-  def initialize(marshalled_object : ::Ruby::Marshal::Object)
+  def initialize(marshalled_object : ::Ruby::Marshal::StreamObject)
+		marshalled_object = marshalled_object.as(::Ruby::Marshal::Object)
 		@id = marshalled_object.read_raw_attr("id").as(::Int32)
 		@name = marshalled_object.read_raw_attr("name").as(::String)
 		@valid = marshalled_object.read_raw_attr("valid").as(::Bool)
@@ -27,4 +28,16 @@ end
 class ExtendedUser
 	property :id
 	ruby_marshal_properties({ id: ::Int32 })
+end
+
+struct Customer
+  property :name, :address, :valid, :age
+
+	def initialize(obj : ::Ruby::Marshal::StreamObject)
+		obj = obj.as(::Ruby::Marshal::Struct)
+		@name = obj.read_raw_attr("name").as(::String)
+		@address = obj.read_raw_attr("address").as(::String)
+		@valid = obj.read_raw_attr("valid").as(::Bool)
+		@age = obj.read_raw_attr("age").as(::Int32)
+	end
 end

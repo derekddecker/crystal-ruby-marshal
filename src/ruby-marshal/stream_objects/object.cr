@@ -82,16 +82,11 @@ macro ruby_marshal_properties(prop_hash)
 		end
 	{% end %}
 
-	def initialize(marshalled_object : ::Ruby::Marshal::Object)
+	def initialize(marshalled_object : ::Ruby::Marshal::StreamObject)
+		marshalled_object = marshalled_object.as(::Ruby::Marshal::Object)
 		{% for prop, klass in prop_hash %}
 			@{{ prop.id }} = read_ruby_marshalled_{{ prop.id }}(marshalled_object).as({{ klass }})
 		{% end %}
 	end
 
-end
-
-macro ruby_marshal_initialize(prop_hash)
-	{% for prop, klass in prop_hash %}
-		@{{ prop.id }} = read_ruby_marshalled_{{ prop.id }}(marshalled_object).as({{ klass }})
-	{% end %}
 end

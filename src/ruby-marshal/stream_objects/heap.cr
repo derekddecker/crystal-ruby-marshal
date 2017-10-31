@@ -5,10 +5,14 @@ module Ruby::Marshal
 	class Heap
 
 		@@sym_heap = ::Array(Symbol).new
-		@@obj_heap = ::Array(String | Array | StreamObject | Hash).new
+		@@obj_heap = ::Array(String | Array | StreamObject | Hash | Struct).new
 
 		def self.add(symbol : Symbol)
 			@@sym_heap << symbol
+		end
+
+		def self.add(object : ::Ruby::Marshal::Struct)
+			@@obj_heap << object
 		end
 
 		def self.add(object : ::Ruby::Marshal::Object)

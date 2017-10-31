@@ -51,7 +51,7 @@ Ruby::Marshal.load( File.open("marshalled.object") )
  - [x] "Object¶ ↑" 
  - [x] "Regular Expression¶ ↑"
  - [x] "String¶ ↑"
- - [ ] "Struct¶ ↑"
+ - [x] "Struct¶ ↑"
  - [ ] "User Class¶ ↑"
  - [ ] "User Defined¶ ↑"
  - [ ] "User Marshal¶ ↑"

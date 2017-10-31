@@ -270,4 +270,21 @@ describe Ruby::Marshal do
 		regex.match("'asdf'").should eq(nil)
 	end
 
+	it "should read a marshalled struct" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-struct.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-struct.out" ) )
+		puts object.inspect
+		object.should be_a(::Ruby::Marshal::Struct)
+	end
+
+	it "should read a marshalled struct into a class" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-struct.out`
+		object = Ruby::Marshal.load( Customer, File.read( "#{SPEC_ROOT}/data/marshalled-struct.out" ) )
+		object.should be_a(::Customer)
+		object.name.should eq("Dave")
+		object.age.should eq(29)
+		object.valid.should eq(false)
+		object.address.should eq("123 Main")
+	end
+
 end

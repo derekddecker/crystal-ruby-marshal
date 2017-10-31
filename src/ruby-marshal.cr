@@ -14,11 +14,11 @@ module Ruby::Marshal
 	end
 
 	def self.load(klass : ::Class, source : ::String)
-		klass.new( self._load(source.to_slice).as(Ruby::Marshal::Object) )
+		klass.new( self._load(source.to_slice) )
 	end
 
 	def self.load(klass : ::Class, source : IO)
-		klass.new( self._load(source.gets_to_end).as(Ruby::Marshal::Object) )
+		klass.new( self._load(source.get_to_end) )
 	end
 
 	# The first two bytes of the stream contain the major and minor version, each as

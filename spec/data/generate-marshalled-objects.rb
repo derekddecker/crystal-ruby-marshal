@@ -15,6 +15,9 @@ class ExtendedUser
 	attr_accessor :id
 end
 
+Customer = Struct.new(:name, :address, :valid, :age)
+dave = Customer.new("Dave", "123 Main", false, 29)
+
 user = User.new
 user.id = 1
 user.name = 'Test'
@@ -74,3 +77,4 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-class.out'), 'w') { |
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-module.out'), 'w') { |f| f.write(Marshal.dump(TestModule)) }
 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-regex.out'), 'w') { |f| f.write(Marshal.dump(Regexp.new("^[A-Za-z0-9]+$", Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED))) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-struct.out'), 'w') { |f| f.write(Marshal.dump(dave)) }
