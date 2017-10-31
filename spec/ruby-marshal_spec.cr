@@ -273,7 +273,6 @@ describe Ruby::Marshal do
 	it "should read a marshalled struct" do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-struct.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-struct.out" ) )
-		puts object.inspect
 		object.should be_a(::Ruby::Marshal::Struct)
 	end
 
@@ -285,6 +284,17 @@ describe Ruby::Marshal do
 		object.age.should eq(29)
 		object.valid.should eq(false)
 		object.address.should eq("123 Main")
+	end
+
+	it "should read a marshalled user class" do
+		#puts `xxd #{SPEC_ROOT}/data/marshalled-user-class.out`
+		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-user-class.out" ) )
+		object.should be_a(Ruby::Marshal::UserClass)
+		object = object.as(Ruby::Marshal::UserClass)
+		object.class_name.data.should eq("UserHash")
+		object.data.should be_a(Ruby::Marshal::HashWithDefault)
+		wrapped_object = object.data.as(Ruby::Marshal::HashWithDefault)
+		wrapped_object["data"].data.should eq(123)
 	end
 
 end

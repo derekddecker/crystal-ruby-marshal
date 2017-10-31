@@ -28,6 +28,7 @@ module Ruby::Marshal
 				when Int8.new(109); Module.new(stream)
 				when Int8.new(47); Regex.new(stream)
 				when Int8.new(83); Struct.new(stream)
+				when Int8.new(67); UserClass.new(stream)
 				else return Null.new(stream)
 			end
 		end

@@ -30,6 +30,7 @@ require "./stream_objects/class"
 require "./stream_objects/module"
 require "./stream_objects/regex"
 require "./stream_objects/struct"
+require "./stream_objects/user_class"
 
 require "./stream_objects/heap"
 require "./stream_object_factory"
