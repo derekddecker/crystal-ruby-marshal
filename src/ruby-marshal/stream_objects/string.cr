@@ -3,21 +3,20 @@ require "./integer"
 
 module Ruby::Marshal
 
+	# ‘“’ represents a String. Following the type byte is a 
+	# byte sequence containing the string content. When dumped 
+	# from ruby 1.9 an encoding instance variable (:E see 
+	# above) should be included unless the encoding is binary.
 	class String < StreamObject
 
 		getter :data
+		@data : ::String
 
 		def initialize(stream : Bytes)
-			@data = ""
-			string_length = Integer.get(stream)
-      super(string_length.data)
-			stream += string_length.size
-			read(stream)
+			source = ByteSequence.new(stream)
+			@data = ::String.new(source.data)
+			super(source.stream_size)
 			Heap.add(self)
-		end
-
-		def read(stream : Bytes)
-			@data = ::String.new(stream[0, size])
 		end
 
 	end

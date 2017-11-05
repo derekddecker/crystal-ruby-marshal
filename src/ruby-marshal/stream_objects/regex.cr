@@ -19,17 +19,11 @@ module Ruby::Marshal
     @data : ::Regex
 
 		def initialize(stream : Bytes, @data : ::Regex = ::Regex.new(""))
-      super(0x00)
-			read(stream)
-		end
-
-		def read(stream : Bytes)
 			source = ByteSequence.new(stream)
-			stream += source.stream_size
 			# The flags are a lie. Ruby does not marshal the option data :(
 			#flags = ByteSequence.new(stream)
 			@data = ::Regex.new(::String.new(source.data))
-			@size += source.stream_size # + flags.stream_size
+			super(source.stream_size + source.length.size)
 		end
 
 	end

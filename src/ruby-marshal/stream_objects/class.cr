@@ -19,20 +19,11 @@ module Ruby::Marshal
 
 		getter :data
     @data : ::String
-		@length : Integer
 
 		def initialize(stream : Bytes)
-			@data = ""
-			@length = Integer.get(stream)
-      super(@length.size)
-			stream += @length.size
-			read(stream)
-		end
-
-		def read(stream : Bytes)
-			# noop
-			@data = ::String.new(stream[0, @length.data])
-			@size += @length.data
+			source = ByteSequence.new(stream)
+			@data = ::String.new(source.data)
+			super(source.stream_size)
 		end
 
 	end

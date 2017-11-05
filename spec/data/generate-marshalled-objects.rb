@@ -83,7 +83,8 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-hash-with-default.out
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-class.out'), 'w') { |f| f.write(Marshal.dump(User)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-module.out'), 'w') { |f| f.write(Marshal.dump(TestModule)) }
 
-File.open( File.join(File.dirname( __FILE__ ), 'marshalled-regex.out'), 'w') { |f| f.write(Marshal.dump(Regexp.new("^[A-Za-z0-9]+$", Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED))) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-regex.out'), 'w') { |f| f.write(Marshal.dump(Regexp.new("^[A-Za-z0-9]+$"))) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-regex-with-flags.out'), 'w') { |f| f.write(Marshal.dump(Regexp.new("^[A-Za-z0-9]+$", Regexp::IGNORECASE | Regexp::MULTILINE | Regexp::EXTENDED))) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-struct.out'), 'w') { |f| f.write(Marshal.dump(dave)) }
 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-user-class.out'), 'w') { |f| f.write(Marshal.dump(user_hash)) }

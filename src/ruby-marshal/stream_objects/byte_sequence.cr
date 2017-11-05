@@ -4,7 +4,7 @@ module Ruby::Marshal
 
 	class ByteSequence
 	
-		getter :data
+		getter :data, :length
 		@length : Integer
 	
 		def initialize(stream : ::Bytes, @data : ::Bytes = ::Bytes.new(0x00))
@@ -13,7 +13,7 @@ module Ruby::Marshal
 		end
 
 		def stream_size
-			@length.size + @length.data
+			@length.data
 		end
 
 	end

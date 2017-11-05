@@ -149,7 +149,7 @@ puts obj.data.inspect
 ```
 
 #### Bignum
-Bignum is not currently in the Crystal-lang stdlib, so the data is simply stored in a byte slice as not cast to a native data type.
+Bignum is not currently in the crystal stdlib, so the data is simply stored in a byte slice and is not cast to a native data type.
 
 ```ruby
 File.open( 'marshalled-bignum.out', 'w') { |f| f.write(Marshal.dump(123456789 ** 4)) }
@@ -209,7 +209,7 @@ puts obj.data.inspect
 ```
 
 #### Hash and Hash with Default Value
-`#data` returns a hash of Ruby::Marshal StreamObjects, while `#raw_hash` returns a fully converted crystal hash.
+`#data` returns a hash of `Ruby::Marshal::StreamObject`s, while `#raw_hash` returns a fully converted crystal hash.
 
 Ruby::Marshal::HashWithDefault behaves the same, and respects the marshalled default value when accessing unset keys.
 
@@ -366,7 +366,7 @@ puts Ruby::Marshal.load( Customer, File.read("marshalled-struct.out") )
 ```
 
 #### User Class
-Per the Ruby documentation, a User class is any classwhich extends the core Ruby String, Regexp, Array, or Hash classes.
+Per the Ruby documentation, a `User` class is any class which extends the core Ruby `String`, `Regexp`, `Array`, or `Hash` classes.
 
 ```ruby
 class UserHash < Hash ; end

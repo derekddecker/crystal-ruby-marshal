@@ -2,24 +2,28 @@ require "./integer"
 
 module Ruby::Marshal
 
+	# “f” represents a Float object. Following the type byte 
+	# is a byte sequence containing the float value. The 
+	# following values are special:
+	# 
+	# “inf” - Positive infinity
+	# “-inf” - Negative infinity
+	# “nan” - Not a Number
+	# 
+	# Otherwise the byte sequence contains a C double (loadable 
+	# by strtod(3)). Older minor versions of Marshal also stored 
+	# extra mantissa bits to ensure portability across platforms
+	# but 4.8 does not include these.
 	class Float < StreamObject
 
 		@data : ::Float64
-		@length : Integer
 		getter :data
 
 		def initialize(stream : Bytes)
-			@data = ::Float64.new(0x00)
-			@length = Integer.get(stream)
-			stream += @length.size
-			super(@length.size)
-			read(stream)
-			@size += @length.stream_size
-		end
-
-		def read(stream : Bytes)
-			float_io = ::IO::Memory.new(stream[0, @length.data])
+			source = ByteSequence.new(stream)
+			float_io = ::IO::Memory.new(source.data)
 			@data = ::Float64.new(float_io.to_s)
+			super(source.stream_size)
 		end
 
 	end
