@@ -37,7 +37,7 @@ Ruby::Marshal.load( File.open("marshalled.object") )
 
 `Ruby::Marshal.load` will return a subclass of `Ruby::Marshal::StreamObject` which wraps the unmarshalled object. To access the underlying / raw crystal data structure, call `#data` on the `StreamObject`. See below for the particulars on a per-datatype basis.
 
-### Unmarshal type support:
+### Unmarshal - type support
 
 #### true, false, nil
 ```crystal
@@ -162,22 +162,30 @@ puts obj.data.inspect
 ```
 
 #### Hash and Hash with Default Value
+`#data` returns a hash of Ruby::Marshal StreamObjects, while `#raw_hash` returns a fully converted crystal hash.
+
+Ruby::Marshal::HashWithDefault behaves the same, and respects the marshalled default value when accessing unset keys.
 ```sh
+$ xxd marshalled-hash.out
+0000000: 0408 7b06 3a0b 7369 6d70 6c65 4922 0968  ..{.:.simpleI".h
+0000010: 6173 6806 3a06 4554                      ash.:.ET
 ```
 
 ```crystal
-obj = Ruby::Marshal.load( File.read("marshalled-float.out") )
+obj = Ruby::Marshal.load( File.read("marshalled-hash.out") )
 #=> #<Ruby::Marshal::Float:0x10071dec0>
 puts obj.data.inspect
-#=> -1.67320495432149
+#=> {#<Ruby::Marshal::Symbol:0x10a552e80 @size=6, @data="simple", @symbol_length=1> => #<Ruby::Marshal::InstanceObject:0x10a556ed0 @size=11, @num_instance_variables=#<Ruby::Marshal::OneByteInt:0x10a55dfb0 @size=1, @data=1>, @instance_variables={"E" => #<Ruby::Marshal::True:0x10a55df80 @size=0, @data=true>}, @data=#<Ruby::Marshal::String:0x10a552e40 @size=4, @data="hash">>}
+puts obj.raw_hash.inspect
+#=> {"simple" => "hash"}
 ```
 
 #### Object
-`Ruby::Marshal.load(::Class, IO)` and `Ruby::Marshal.load(::Class, ::String)` are provided as convenience methods for unmarshalling straight into a Crystal object. Any class passed to these methods must implement `#initialize(obj : ::Ruby::Marshal::StreamObject` in order to read the marshalled data.
+`Ruby::Marshal.load(::Class, IO)` and `Ruby::Marshal.load(::Class, ::String)` are provided as convenience methods for unmarshalling straight into a Crystal object. Any class passed to these methods must implement `#initialize(obj : ::Ruby::Marshal::StreamObject)` in order to read the marshalled data.
 
 The `ruby_marshal_properties` macro is provided as a convenience for simple marshalled objects. It will auto-unmarshal for you provided the correct schema for the data. 
 
-Unlike the other datatypes, `#data` in the case of objects will return a `Ruby::Marshall::Null` object. To use an unmarshalled object, case to `Ruby::Marshal::Object`. You can then reach the data by means of `#read_raw_attr(::String)` or `#read_attr(::String)`.
+Unlike the other datatypes, `#data` in the case of objects will return a `Ruby::Marshall::Null` object. To use an unmarshalled object, cast to `Ruby::Marshal::Object`. You can then reach the data by means of `#read_raw_attr(::String)` or `#read_attr(::String)`.
 
 ```sh
 $ xxd marshalled-valid.out
@@ -240,6 +248,7 @@ obj.data.as(::Regex).match("howdyabc")
 ```
 
 #### String
+Strings are marshalled in ruby as objects with instance variables, so they are unmarshalled as `Ruby::Marshal::InstanceObject`s. You can access the raw string value in `#data`. The encoding is set in the `E` instance variable.
 ```sh
 $ xxd marshalled-string.out
 0000000: 0408 4922 1074 6573 745f 7374 7269 6e67  ..I".test_string
@@ -247,13 +256,16 @@ $ xxd marshalled-string.out
 ```
 
 ```crystal
-obj = Ruby::Marshal.load( File.read("marshalled-float.out") )
-#=> #<Ruby::Marshal::Float:0x10071dec0>
+obj = Ruby::Marshal.load( File.read("marshalled-string.out") )
+#=> #<Ruby::Marshal::InstanceObject:0x1083dbf00>
 puts obj.data.inspect
-#=> -1.67320495432149
+#=> "test_string"
+puts obj.inspect
+#=> #<Ruby::Marshal::InstanceObject:0x108640f00 @size=18, @num_instance_variables=#<Ruby::Marshal::OneByteInt:0x108647fe0 @size=1, @data=1>, @instance_variables={"E" => #<Ruby::Marshal::True:0x108647fb0 @size=0, @data=true>}, @data=#<Ruby::Marshal::String:0x10863ce80 @size=11, @data="test_string">>
 ```
 
 #### Struct
+Similar to an Object, structs can be unmarshalled and loaded into a crystal struct by passing the class to `Ruby::Marshal.load`. The passed class must the implement `#initialize(::Ruby::Marshal::StreamObject)` method.
 ```sh
 $ xxd marshalled-struct.out
 0000000: 0408 533a 0d43 7573 746f 6d65 7209 3a09  ..S:.Customer.:.
@@ -264,13 +276,24 @@ $ xxd marshalled-struct.out
 ```
 
 ```crystal
-obj = Ruby::Marshal.load( File.read("marshalled-float.out") )
-#=> #<Ruby::Marshal::Float:0x10071dec0>
-puts obj.data.inspect
-#=> -1.67320495432149
+struct Customer
+  property :name, :address, :valid, :age
+
+	def initialize(obj : ::Ruby::Marshal::StreamObject)
+		obj = obj.as(::Ruby::Marshal::Struct)
+		@name = obj.read_raw_attr("name").as(::String)
+		@address = obj.read_raw_attr("address").as(::String)
+		@valid = obj.read_raw_attr("valid").as(::Bool)
+		@age = obj.read_raw_attr("age").as(::Int32)
+	end
+end
+
+puts Ruby::Marshal.load( Customer, File.read("marshalled-struct.out") )
+#=> Customer(@name="Dave", @address="123 Main", @valid=false, @age=29)
 ```
 
 #### User Class
+Per the Ruby documentation, a User class is any classwhich extends the core Ruby String, Regexp, Array, or Hash classes.
 ```sh
 $ xxd marshalled-user-class.out
 0000000: 0408 433a 0d55 7365 7248 6173 687d 0649  ..C:.UserHash}.I
@@ -279,9 +302,11 @@ $ xxd marshalled-user-class.out
 
 ```crystal
 obj = Ruby::Marshal.load( File.read("marshalled-float.out") )
-#=> #<Ruby::Marshal::Float:0x10071dec0>
+#=> #<Ruby::Marshal::UserClass:0x107fb5d20>
 puts obj.data.inspect
-#=> -1.67320495432149
+#=> #<Ruby::Marshal::HashWithDefault:0x10970cd50 @size=19, @data={#<Ruby::Marshal::InstanceObject:0x10970cd20 @size=11, @num_instance_variables=#<Ruby::Marshal::OneByteInt:0x109711ed0 @size=1, @data=1>, @instance_variables={"E" => #<Ruby::Marshal::True:0x109711ea0 @size=0, @data=true>}, @data=#<Ruby::Marshal::String:0x109708cc0 @size=4, @data="data">> => #<Ruby::Marshal::OneBytePositiveInt:0x109711e90 @size=1, @data=123>}, @num_keys=#<Ruby::Marshal::OneByteInt:0x109711ef0 @size=1, @data=1>, @default_value=#<Ruby::Marshal::ZeroByteInt:0x109711e80 @size=1, @data=0>>
+puts Ruby::Marshal.load( File.read("marshalled-user-class.out") ).data.as(Ruby::Marshal::HashWithDefault).raw_hash.inspect
+#=> {"data" => 123}
 ```
 
 
