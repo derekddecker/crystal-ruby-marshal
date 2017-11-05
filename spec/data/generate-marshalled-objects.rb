@@ -35,6 +35,9 @@ File.open( File.join(File.dirname( __FILE__ ), 'marshalled-object-extended.out')
 
 bad_version = ["00000100", "00001001"].map { |i| i.to_i(2).chr }.join
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-invalid-version.out'), 'wb') { |f| f.write(bad_version) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-true.out'), 'wb') { |f| f.write(Marshal.dump(true)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-false.out'), 'wb') { |f| f.write(Marshal.dump(false)) }
+File.open( File.join(File.dirname( __FILE__ ), 'marshalled-nil.out'), 'w') { |f| f.write(Marshal.dump(nil)) }
 
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-integer-upper.out'), 'wb') { |f| f.write(Marshal.dump(-1)) }
 File.open( File.join(File.dirname( __FILE__ ), 'marshalled-negative-integer-lower.out'), 'wb') { |f| f.write(Marshal.dump(-122)) }

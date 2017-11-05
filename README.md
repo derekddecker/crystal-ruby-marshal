@@ -39,21 +39,48 @@ Ruby::Marshal.load( File.open("marshalled.object") )
 
 ### Unmarshal - type support
 
+In the following examples I first provide the ruby code which generated the marshalled object, followed by the byte stream that was written by the ruby marshal, followed by the relevant crystal code to unmarshal the object.
+
 #### true, false, nil
+##### true
+```ruby
+File.open('marshalled-true.out', 'w') { |f| f.write(Marshal.dump(true)) }
+```
+```sh
+$ xxd marshalled-true.out
+0000000: 0408 54
+```
 ```crystal
-# True
 obj = Ruby::Marshal.load("\u{04}\u{08}T")
 #=> #<Ruby::Marshal::True:0x10f0a7ff0>
 puts obj.data
 #=> true
+```
 
-# False
+##### false
+```ruby
+File.open('marshalled-false.out', 'w') { |f| f.write(Marshal.dump(false)) }
+```
+```sh
+$ xxd marshalled-false.out
+0000000: 0408 46
+```
+```crystal
 obj = Ruby::Marshal.load("\u{04}\u{08}F")
 #=> #<Ruby::Marshal::False:0x1096e9ff0>
 puts obj.data
 #=> false
+```
 
-# nil
+##### nil
+```ruby
+File.open('marshalled-nil.out', 'w') { |f| f.write(Marshal.dump(nil)) }
+```
+```sh
+$ xxd marshalled-nil.out
+0000000: 0408 30
+```
+```crystal
 obj = Ruby::Marshal.load("\u{04}\u{08}\u{30}")
 #=> #<Ruby::Marshal::Null:0x104682ff0> 
 puts obj.data.inspect
@@ -61,6 +88,10 @@ puts obj.data.inspect
 ```
 
 #### Integers
+```ruby
+```
+```sh
+```
 ```crystal
 obj = Ruby::Marshal.load("\u{04}\u{08}\u{69}\u{04}\u{ff}\u{ff}\u{ff}\u{3f}")
 #=> #<Ruby::Marshal::FourBytePositiveInt:0x1018d7ff0>
@@ -70,11 +101,15 @@ puts obj.data
 
 #### Symbols 
 Symbols are cast to strings, as symbols in Crystal cannot be created at runtime.
+```ruby
+```
 ```sh
 $ xxd marshalled-symbol.out
 0000000: 0408 3a10 7465 7374 5f73 796d 626f 6c    ..:.test_symbol
 ```
 
+```ruby
+```
 ```crystal
 obj = Ruby::Marshal.load( File.read("marshalled-symbol.out") )
 #=> #<Ruby::Marshal::Symbol:0x11035dec0>
@@ -83,6 +118,8 @@ puts obj.data.inspect
 ```
 
 #### Array
+```ruby
+```
 ```sh
 $ xxd marshalled-symbol-array.out
 0000000: 0408 5b07 3a0a 6865 6c6c 6f3b 00         ..[.:.hello;.
@@ -111,6 +148,8 @@ puts obj.data.inspect
 #### Bignum
 Bignum is not currently in the Crystal-lang stdlib, so the data is simply stored in a byte slice as not cast to a native data type.
 
+```ruby
+```
 ```sh
 $ xxd marshalled-bignum.out
 0000000: 0408 6c2b 0cb1 1ba5 47d0 4606 6776 1546  ..l+....G.F.gv.F
@@ -125,6 +164,8 @@ puts obj.data.inspect
 ```
 
 #### Class and Module
+```ruby
+```
 ```sh
 $ xxd marshalled-class.out
 0000000: 0408 6309 5573 6572                      ..c.User
@@ -148,6 +189,8 @@ puts obj.data.inspect
 ```
 
 #### Float
+```ruby
+```
 ```sh
 $ xxd marshalled-float.out
 0000000: 0408 6616 2d31 2e36 3733 3230 3439 3534  ..f.-1.673204954
@@ -165,6 +208,8 @@ puts obj.data.inspect
 `#data` returns a hash of Ruby::Marshal StreamObjects, while `#raw_hash` returns a fully converted crystal hash.
 
 Ruby::Marshal::HashWithDefault behaves the same, and respects the marshalled default value when accessing unset keys.
+```ruby
+```
 ```sh
 $ xxd marshalled-hash.out
 0000000: 0408 7b06 3a0b 7369 6d70 6c65 4922 0968  ..{.:.simpleI".h
@@ -187,6 +232,8 @@ The `ruby_marshal_properties` macro is provided as a convenience for simple mars
 
 Unlike the other datatypes, `#data` in the case of objects will return a `Ruby::Marshall::Null` object. To use an unmarshalled object, cast to `Ruby::Marshal::Object`. You can then reach the data by means of `#read_raw_attr(::String)` or `#read_attr(::String)`.
 
+```ruby
+```
 ```sh
 $ xxd marshalled-valid.out
 0000000: 0408 6f3a 0955 7365 7209 3a08 4069 6469  ..o:.User.:.@idi
@@ -232,6 +279,8 @@ end
 #### Regular Expression
 Contrary to the ruby documentation, ruby does not actually attach any Regex option data to the marshalled bytestream. Aside from that detail, the Regex source is unmarshalled as expected.
 
+```ruby
+```
 ```sh
 $ xxd marshalled-regex.out
 0000000: 0408 492f 135e 5b41 2d5a 612d 7a30 2d39  ..I/.^[A-Za-z0-9
@@ -249,6 +298,9 @@ obj.data.as(::Regex).match("howdyabc")
 
 #### String
 Strings are marshalled in ruby as objects with instance variables, so they are unmarshalled as `Ruby::Marshal::InstanceObject`s. You can access the raw string value in `#data`. The encoding is set in the `E` instance variable.
+
+```ruby
+```
 ```sh
 $ xxd marshalled-string.out
 0000000: 0408 4922 1074 6573 745f 7374 7269 6e67  ..I".test_string
@@ -266,6 +318,9 @@ puts obj.inspect
 
 #### Struct
 Similar to an Object, structs can be unmarshalled and loaded into a crystal struct by passing the class to `Ruby::Marshal.load`. The passed class must the implement `#initialize(::Ruby::Marshal::StreamObject)` method.
+
+```ruby
+```
 ```sh
 $ xxd marshalled-struct.out
 0000000: 0408 533a 0d43 7573 746f 6d65 7209 3a09  ..S:.Customer.:.
@@ -294,6 +349,9 @@ puts Ruby::Marshal.load( Customer, File.read("marshalled-struct.out") )
 
 #### User Class
 Per the Ruby documentation, a User class is any classwhich extends the core Ruby String, Regexp, Array, or Hash classes.
+
+```ruby
+```
 ```sh
 $ xxd marshalled-user-class.out
 0000000: 0408 433a 0d55 7365 7248 6173 687d 0649  ..C:.UserHash}.I
