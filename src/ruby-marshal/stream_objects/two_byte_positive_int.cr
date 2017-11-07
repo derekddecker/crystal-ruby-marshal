@@ -13,6 +13,12 @@ module Ruby::Marshal
 			@data = Int32.new(::IO::ByteFormat::LittleEndian.decode(UInt16, stream[1, size]))
 		end
 
+		def dump(bytestream : ::Bytes)
+			#output = ::Bytes.new(1) 
+			#output[0] = @type_byte
+			#bytestream.concat(output)
+		end
+
 	end
 
 end

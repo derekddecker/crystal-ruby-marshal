@@ -60,4 +60,12 @@ module Ruby::Marshal
 		return StreamObjectFactory.get(stream)
 	end
 
+	def self.dump(obj) : ::Bytes
+		bytestream = ::Bytes.new(2)
+		bytestream[0] = UInt8.new(MAJOR_VERSION)
+		bytestream[1] = UInt8.new(MINOR_VERSION)
+		result = StreamObjectFactory.from(obj).dump(bytestream)
+		result.nil? ? bytestream : result
+	end
+
 end

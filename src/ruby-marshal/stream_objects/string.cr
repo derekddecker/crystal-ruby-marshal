@@ -19,6 +19,12 @@ module Ruby::Marshal
 			Heap.add(self)
 		end
 
+		def dump(bytestream : ::Bytes)
+			#output = ::Bytes.new(1) 
+			#output[0] = @type_byte
+			#bytestream.concat(output)
+		end
+
 	end
 
 end

@@ -6,11 +6,12 @@ module Ruby::Marshal
 
 		def initialize(stream : Bytes)
 			super(Int32.new(0x01))
-			read(stream)
 		end
 
-		def read(stream : Bytes)
-			# noop
+		def dump(bytestream : ::Bytes)
+			#output = ::Bytes.new(1) 
+			#output[0] = @type_byte
+			#bytestream.concat(output)
 		end
 
 	end
