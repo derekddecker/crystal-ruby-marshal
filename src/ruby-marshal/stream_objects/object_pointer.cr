@@ -21,7 +21,7 @@ module Ruby::Marshal
 			@data = Heap.get_obj(@heap_index).data
 		end
 
-		def dump(bytestream : ::Bytes)
+		def dump
 			#output = ::Bytes.new(1) 
 			#output[0] = @type_byte
 			#bytestream.concat(output)

@@ -5,8 +5,14 @@ module Ruby::Marshal
 	class ThreeBytePositiveInt < Integer
 
 		def initialize(stream : Bytes)
+			@data = Int32.new(0x00)
 			super(Int32.new(0x03))
 			read(stream)
+		end
+
+		def initialize(int : ::Int32)
+			super(Int32.new(0x03))
+			@data = int
 		end
 
 		def read(stream : Bytes)
@@ -21,10 +27,15 @@ module Ruby::Marshal
 			@data = ::IO::ByteFormat::BigEndian.decode(Int32, padded_slice)
 		end
 
-		def dump(bytestream : ::Bytes)
-			#output = ::Bytes.new(1) 
-			#output[0] = @type_byte
-			#bytestream.concat(output)
+		def dump
+			output = ::Bytes.new(1)
+			output[0] = UInt8.new(0x03) # 3
+			puts @data.inspect
+			io = ::IO::Memory.new(0x03)
+			@data.to_io(io, ::IO::ByteFormat::LittleEndian)
+			data_slice = ::Bytes.new(3)
+			io.rewind.read(data_slice)
+			output.concat(data_slice)
 		end
 
 	end

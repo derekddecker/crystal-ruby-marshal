@@ -12,8 +12,25 @@ module Ruby::Marshal
 			@data = stream[@length.size, @length.data]	
 		end
 
+		def initialize(str : ::String)
+			@length = ThreeBytePositiveInt.new(str.size)
+			bytes = str.bytes
+			i = 0
+			result = ::Bytes.new(bytes.size)
+			while(i < bytes.size)
+				result[i] = bytes[i]
+				i += 1
+			end
+			@data = result
+		end
+
 		def stream_size
 			@length.data
+		end
+		
+		def dump : ::Bytes
+			result = @length.dump || ::Bytes.new(0)
+			result.concat(@data)
 		end
 
 	end

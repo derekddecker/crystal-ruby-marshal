@@ -19,17 +19,31 @@ module Ruby::Marshal
 
 		getter :data
     @data : ::String
+		@byte_sequence : ByteSequence
+		@type_byte = UInt8.new(0x63)
 
 		def initialize(stream : Bytes)
-			source = ByteSequence.new(stream)
-			@data = ::String.new(source.data)
-			super(source.stream_size)
+			@byte_sequence = ByteSequence.new(stream)
+			@data = ::String.new(@byte_sequence.data)
+			super(@byte_sequence.stream_size)
 		end
 
-		def dump(bytestream : ::Bytes)
-			#output = ::Bytes.new(1) 
-			#output[0] = @type_byte
-			#bytestream.concat(output)
+		def initialize(klass : ::Class)
+			@data = klass.to_s
+			@byte_sequence = ByteSequence.new(@data)
+			super(@byte_sequence.stream_size)
+		end
+
+		def initialize(mod : ::Module)
+			@data = mod.to_s
+			@byte_sequence = ByteSequence.new(@data)
+			super(@byte_sequence.stream_size)
+		end
+
+		def dump
+			result = ::Bytes.new(1)
+			result[0] = UInt8.new(0x63)
+			result.concat(@byte_sequence.dump)
 		end
 
 	end

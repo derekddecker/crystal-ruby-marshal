@@ -25,7 +25,7 @@ module Ruby::Marshal
 			1 + @symbol_length + size
 		end
 
-		def dump(bytestream : ::Bytes)
+		def dump
 			#output = ::Bytes.new(1) 
 			#output[0] = @type_byte
 			#bytestream.concat(output)

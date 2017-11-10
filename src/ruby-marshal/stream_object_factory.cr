@@ -33,13 +33,20 @@ module Ruby::Marshal
 			end
 		end
 
-		def self.from(obj : ::Object) : StreamObject
-			case obj.class.to_s
-			when "Bool"
-				obj = obj.as(Bool)
-				return obj ? True.new(obj) : False.new(obj) 
-			else raise UnsupportedMarshalClass.new("Do not know how to handle dumping type: #{obj.class}")
-			end
+		def self.from(obj : ::Bool) : StreamObject
+			obj ? True.new(obj) : False.new(obj) 
+		end
+
+		def self.from(obj : ::Nil) : StreamObject
+			Null.new
+		end
+
+		def self.from(obj : ::Class) : StreamObject
+			Ruby::Marshal::Class.new(obj)
+		end
+
+		def self.from(obj : ::Module) : StreamObject
+			Ruby::Marshal::Class.new(obj)
 		end
 
 	end

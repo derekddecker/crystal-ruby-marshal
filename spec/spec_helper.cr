@@ -42,3 +42,6 @@ struct Customer
 	end
 end
 
+module TestModule
+
+end

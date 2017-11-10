@@ -64,8 +64,8 @@ module Ruby::Marshal
 		bytestream = ::Bytes.new(2)
 		bytestream[0] = UInt8.new(MAJOR_VERSION)
 		bytestream[1] = UInt8.new(MINOR_VERSION)
-		result = StreamObjectFactory.from(obj).dump(bytestream)
-		result.nil? ? bytestream : result
+		result = StreamObjectFactory.from(obj).dump || ::Bytes.new(0)
+		bytestream.concat(result)
 	end
 
 end
