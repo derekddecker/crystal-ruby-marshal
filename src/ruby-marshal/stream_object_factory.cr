@@ -49,6 +49,10 @@ module Ruby::Marshal
 			Ruby::Marshal::Class.new(obj)
 		end
 
+		def self.from(sym : ::Symbol) : StreamObject
+			Ruby::Marshal::Symbol.new(sym)
+		end
+
 	end
 
 end

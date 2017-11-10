@@ -30,7 +30,6 @@ module Ruby::Marshal
 		def dump
 			output = ::Bytes.new(1)
 			output[0] = UInt8.new(0x03) # 3
-			puts @data.inspect
 			io = ::IO::Memory.new(0x03)
 			@data.to_io(io, ::IO::ByteFormat::LittleEndian)
 			data_slice = ::Bytes.new(3)

@@ -27,7 +27,14 @@ describe Ruby::Marshal do
   end
 
   it "#dump a module" do
+		File.open( File.join(File.dirname( __FILE__ ), "tmp", "marshalled-module.out"), "w") { |f| f.write( Ruby::Marshal.dump(TestModule) ) }
 		object = Ruby::Marshal.dump(TestModule)
+		puts object.hexdump
+  end
+
+  it "#dump a symbol" do
+		File.open( File.join(File.dirname( __FILE__ ), "tmp", "marshalled-symbol.out"), "w") { |f| f.write( Ruby::Marshal.dump(:test_symbol) ) }
+		object = Ruby::Marshal.dump(:test_symbol)
 		puts object.hexdump
   end
 
