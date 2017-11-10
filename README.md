@@ -6,8 +6,9 @@ are generally base64 encoded, encrypted marshalled ruby objects - and would othe
 be inaccessible in your crystal application. 
 
 # Quirks
-This project is still experimental. Due to differences in crystal and ruby, symbols 
-cannot be created at runtime, so they are cast to strings.
+This project is still experimental. `Marshal#dump` support is actively being developed
+and is not yet supported in the current state. Due to differences in crystal and ruby, 
+symbols cannot be created at runtime, so they are cast to strings.
 
 ## Installation
 
@@ -391,6 +392,7 @@ puts Ruby::Marshal.load( File.read("marshalled-user-class.out") ).data.as(Ruby::
 
 
 ## Todo
+ - [ ] Marshal.dump (WIP)
  - [ ] Data
  - [ ] User Defined
  - [ ] User Marshal
