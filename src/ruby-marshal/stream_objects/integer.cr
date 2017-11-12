@@ -31,6 +31,10 @@ module Ruby::Marshal
 				return ThreeByteNegativeInt.new(int)
 			elsif int >= 65_536 && int <= 16_777_215
 				return ThreeBytePositiveInt.new(int)
+			elsif int <= -16_777_217 && int >= -1_073_741_824
+		  	return FourByteNegativeInt.new(int)
+			elsif int >= 16_777_216 && int <= 1_073_741_823
+				return FourBytePositiveInt.new(int)
 			else
 				return ZeroByteInt.new
 			end

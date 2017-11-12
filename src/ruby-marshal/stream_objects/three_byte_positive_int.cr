@@ -9,15 +9,6 @@ module Ruby::Marshal
 		def initialize(stream : Bytes)
 			@data = Int32.new(0x00)
 			super(Int32.new(0x03))
-			read(stream)
-		end
-
-		def initialize(int : ::Int32)
-			super(Int32.new(0x03))
-			@data = int
-		end
-
-		def read(stream : Bytes)
 			stream += 1
 			data_bytes = Slice(UInt8).new(size)
 			data_bytes.copy_from(stream.to_unsafe, size)
@@ -27,6 +18,11 @@ module Ruby::Marshal
 			padded_slice[2] = data_bytes[1]
 			padded_slice[3] = data_bytes[2]
 			@data = ::IO::ByteFormat::BigEndian.decode(Int32, padded_slice)
+		end
+
+		def initialize(int : ::Int32)
+			super(Int32.new(0x03))
+			@data = int
 		end
 
 		def dump

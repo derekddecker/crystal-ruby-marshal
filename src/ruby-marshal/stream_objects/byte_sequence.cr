@@ -13,7 +13,7 @@ module Ruby::Marshal
 		end
 
 		def initialize(str : ::String)
-			@length = ThreeBytePositiveInt.new(str.size)
+			@length = Integer.get(str.size)
 			bytes = str.bytes
 			i = 0
 			result = ::Bytes.new(bytes.size)

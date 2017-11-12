@@ -142,4 +142,32 @@ describe Ruby::Marshal do
 		Ruby::Marshal.load( File.open(f) ).data.should eq(-16_777_216)
   end
 
+  it "#dump 16_777_216" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-four-byte-positive-int-lower.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(16_777_216) ) }
+		object = Ruby::Marshal.dump(16_777_216)
+		Ruby::Marshal.load( File.open(f) ).data.should eq(16_777_216)
+  end
+
+  it "#dump 1_073_741_823" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-four-byte-positive-int-upper.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(1_073_741_823) ) }
+		object = Ruby::Marshal.dump(1_073_741_823)
+		Ruby::Marshal.load( File.open(f) ).data.should eq(1_073_741_823)
+  end
+
+  it "#dump -16_777_217" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-four-byte-negative-int-upper.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(-16_777_217) ) }
+		object = Ruby::Marshal.dump(-16_777_217)
+		Ruby::Marshal.load( File.open(f) ).data.should eq(-16_777_217)
+  end
+
+  it "#dump -1_073_741_824-" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-four-byte-negative-int-lower.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(-1_073_741_824) ) }
+		object = Ruby::Marshal.dump(-1_073_741_824)
+		Ruby::Marshal.load( File.open(f) ).data.should eq(-1_073_741_824)
+  end
+
 end
