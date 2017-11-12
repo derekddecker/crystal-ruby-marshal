@@ -3,45 +3,52 @@ require "./spec_helper"
 describe Ruby::Marshal do
 
   it "#dump true" do
-		File.open( File.join(File.dirname( __FILE__ ), "tmp", "marshalled-true.out"), "w") { |f| f.write( Ruby::Marshal.dump(true) ) }
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-true.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(true) ) }
 		object = Ruby::Marshal.dump(true)
-		puts object.hexdump
+		Ruby::Marshal.load( File.open(f) ).data.should be_true
   end
 
   it "#dump false" do
-		File.open( File.join(File.dirname( __FILE__ ), "tmp", "marshalled-false.out"), "w") { |f| f.write( Ruby::Marshal.dump(false) ) }
+		f = File.join(File.dirname( __FILE__ ), "tmp", "marshalled-false.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(false) ) }
 		object = Ruby::Marshal.dump(false)
-		puts object.hexdump
+		Ruby::Marshal.load( File.open(f) ).data.should be_false
   end
 
   it "#dump nil" do
-		File.open( File.join(File.dirname( __FILE__ ), "tmp", "marshalled-nil.out"), "w") { |f| f.write( Ruby::Marshal.dump(nil) ) }
+		f = File.join(File.dirname( __FILE__ ), "tmp", "marshalled-nil.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(nil) ) }
 		object = Ruby::Marshal.dump(nil)
-		puts object.hexdump
+		Ruby::Marshal.load( File.open(f) ).data.should be_nil
   end
 
   it "#dump a class" do
-		File.open( File.join(File.dirname( __FILE__ ), "tmp", "marshalled-class.out"), "w") { |f| f.write( Ruby::Marshal.dump(User) ) }
+		f = File.join(File.dirname( __FILE__ ), "tmp", "marshalled-class.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(User) ) }
 		object = Ruby::Marshal.dump(User)
-		puts object.hexdump
+		Ruby::Marshal.load( File.open(f) ).data.should eq("User")
   end
 
   it "#dump a module" do
-		File.open( File.join(File.dirname( __FILE__ ), "tmp", "marshalled-module.out"), "w") { |f| f.write( Ruby::Marshal.dump(TestModule) ) }
+		f = File.join(File.dirname( __FILE__ ), "tmp", "marshalled-module.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(TestModule) ) }
 		object = Ruby::Marshal.dump(TestModule)
-		puts object.hexdump
+		Ruby::Marshal.load( File.open(f) ).data.should eq("TestModule")
   end
 
   it "#dump a symbol" do
-		File.open( File.join(File.dirname( __FILE__ ), "tmp", "marshalled-symbol.out"), "w") { |f| f.write( Ruby::Marshal.dump(:test_symbol) ) }
+		f = File.join(File.dirname( __FILE__ ), "tmp", "marshalled-symbol.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(:test_symbol) ) }
 		object = Ruby::Marshal.dump(:test_symbol)
-		puts object.hexdump
+		Ruby::Marshal.load( File.open(f) ).data.should eq("test_symbol")
   end
 
   it "#dump 0" do
-		File.open( File.join(File.dirname( __FILE__ ), "tmp", "marshalled-zero.out"), "w") { |f| f.write( Ruby::Marshal.dump(0) ) }
+		f = File.join(File.dirname( __FILE__ ), "tmp", "marshalled-zero.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(0) ) }
 		object = Ruby::Marshal.dump(0)
-		puts object.hexdump
+		Ruby::Marshal.load( File.open(f) ).data.should eq(0)
   end
 
   it "#dump 122" do
