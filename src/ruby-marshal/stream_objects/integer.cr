@@ -14,7 +14,7 @@ module Ruby::Marshal
       @data = Int32.new(0x00)
 		end
 
-		def self.get(int : ::UInt8 |::Int8 | ::UInt16 | ::Int16 | ::UInt32 | ::Int32 | ::UInt64 | ::Int64) : StreamObject | Nil
+		def self.get(int : ::UInt8 |::Int8 | ::UInt16 | ::Int16 | ::UInt32 | ::Int32 | ::UInt64 | ::Int64) : StreamObject
 			if int == 0
 				return ZeroByteInt.new
 			elsif int >= -122 && int <= 122
@@ -27,7 +27,7 @@ module Ruby::Marshal
 				return TwoByteNegativeInt.new(int)
 			elsif int >= 256  && int <= 65_535
 				return TwoBytePositiveInt.new(int)
-			elsif int <= -65_537 && int >= -16_777_216-
+			elsif int <= -65_537 && int >= -16_777_216
 				return ThreeByteNegativeInt.new(int)
 			elsif int >= 65_536 && int <= 16_777_215
 				return ThreeBytePositiveInt.new(int)

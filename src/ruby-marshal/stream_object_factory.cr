@@ -49,7 +49,7 @@ module Ruby::Marshal
 			Ruby::Marshal::Symbol.new(sym)
 		end
 
-		def self.from(sym : ::UInt8 |::Int8 | ::UInt16 | ::Int16 | ::UInt32 | ::Int32 | ::UInt64 | ::Int64) : StreamObject | Nil
+		def self.from(sym : ::UInt8 |::Int8 | ::UInt16 | ::Int16 | ::UInt32 | ::Int32 | ::UInt64 | ::Int64) : StreamObject
 			Ruby::Marshal::Integer.get(sym)
 		end
 
