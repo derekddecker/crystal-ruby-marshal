@@ -7,10 +7,33 @@ module Ruby::Marshal
 
     @data : Int32
     getter :data
+		TYPE_BYTE = UInt8.new(0x69)
 
 		def initialize(size : Int32)
 			super(size)
       @data = Int32.new(0x00)
+		end
+
+		def self.get(int : ::UInt8 |::Int8 | ::UInt16 | ::Int16 | ::UInt32 | ::Int32 | ::UInt64 | ::Int64) : StreamObject | Nil
+			if int == 0
+				return ZeroByteInt.new
+			elsif int >= -122 && int <= 122
+				return OneByteInt.new(int)
+			elsif int <= -123 && int >= -256
+				return OneByteNegativeInt.new(int)
+			elsif int >= 123 && int <= 255
+				return OneBytePositiveInt.new(int)
+			elsif int <= -257 && int >= -65_536
+				return TwoByteNegativeInt.new(int)
+			elsif int >= 256  && int <= 65_535
+				return TwoBytePositiveInt.new(int)
+			elsif int <= -65_537 && int >= -16_777_216-
+				return ThreeByteNegativeInt.new(int)
+			elsif int >= 65_536 && int <= 16_777_215
+				return ThreeBytePositiveInt.new(int)
+			else
+				return ZeroByteInt.new
+			end
 		end
 
 		def self.get(stream : Bytes)

@@ -29,8 +29,12 @@ module Ruby::Marshal
 		end
 		
 		def dump : ::Bytes
-			result = @length.dump || ::Bytes.new(0)
-			result.concat(@data)
+			result = @length.dump 
+			if result
+				result[1, result.size - 1].concat(@data)  # strip the "i" type byte
+			else
+				::Bytes.new(0).concat(@data)
+			end
 		end
 
 	end

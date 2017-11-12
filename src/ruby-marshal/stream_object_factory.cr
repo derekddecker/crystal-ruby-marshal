@@ -45,12 +45,12 @@ module Ruby::Marshal
 			Ruby::Marshal::Class.new(obj)
 		end
 
-		def self.from(obj : ::Module) : StreamObject
-			Ruby::Marshal::Class.new(obj)
-		end
-
 		def self.from(sym : ::Symbol) : StreamObject
 			Ruby::Marshal::Symbol.new(sym)
+		end
+
+		def self.from(sym : ::UInt8 |::Int8 | ::UInt16 | ::Int16 | ::UInt32 | ::Int32 | ::UInt64 | ::Int64) : StreamObject | Nil
+			Ruby::Marshal::Integer.get(sym)
 		end
 
 	end

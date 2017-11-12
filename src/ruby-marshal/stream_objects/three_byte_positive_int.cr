@@ -4,6 +4,8 @@ module Ruby::Marshal
 
 	class ThreeBytePositiveInt < Integer
 
+		SUB_TYPE_BYTE = UInt8.new(0x03)
+
 		def initialize(stream : Bytes)
 			@data = Int32.new(0x00)
 			super(Int32.new(0x03))
@@ -28,8 +30,9 @@ module Ruby::Marshal
 		end
 
 		def dump
-			output = ::Bytes.new(1)
-			output[0] = UInt8.new(0x03) # 3
+			output = ::Bytes.new(2)
+			output[0] = Integer::TYPE_BYTE # 3
+			output[1] = SUB_TYPE_BYTE # 3
 			io = ::IO::Memory.new(0x03)
 			@data.to_io(io, ::IO::ByteFormat::LittleEndian)
 			data_slice = ::Bytes.new(3)

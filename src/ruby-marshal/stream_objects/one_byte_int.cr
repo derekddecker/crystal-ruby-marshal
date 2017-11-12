@@ -6,10 +6,6 @@ module Ruby::Marshal
 
 		def initialize(stream : Bytes)
 			super(Int32.new(0x01))
-			read(stream)
-		end
-
-		def read(stream : Bytes)
 			data_bytes = stream[0, size]
 			# negative if first bit is 1
 			if ((data_bytes[0] & (1 << 7)) != 0)
@@ -20,19 +16,26 @@ module Ruby::Marshal
 				# subtracting 5 from the value.
 				@data = Int32.new(Int8.new(data_bytes[0] - 5))
 			end
-			@data
 		end
 
-		def stream_size
-			# 1 for 8-bit identifier "i"
-			# 1 for the 1 byte value
-			return 2
+		def initialize(int : ::Int32)
+			super(Int32.new(0x01))
+			@data = int
 		end
 
 		def dump
-			#output = ::Bytes.new(1) 
-			#output[0] = @type_byte
-			#bytestream.concat(output)
+			output = ::Bytes.new(2)
+			output[0] = UInt8.new(Integer::TYPE_BYTE)
+			if @data < 0
+				output[1] = UInt8.new((@data - 5)) | (1 << 7)
+			else
+				output[1] = UInt8.new(@data + 5)
+			end
+			output
+		end
+
+		def stream_size
+			2
 		end
 
 	end
