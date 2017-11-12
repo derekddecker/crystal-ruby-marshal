@@ -18,10 +18,10 @@ module Ruby::Marshal
 		def initialize(stream : Bytes)
       super(0x00)
 			@data = StreamObjectFactory.get(stream)
-			stream += 1 + @data.as(Ruby::Marshal::StreamObject).stream_size
+			stream += @data.as(Ruby::Marshal::StreamObject).stream_size
 			@num_instance_variables = Integer.get(stream)
 			@instance_variables = ::Hash(::String, StreamObject).new
-			@size = 1 + @data.as(Ruby::Marshal::StreamObject).stream_size + @num_instance_variables.size
+			@size = @data.as(Ruby::Marshal::StreamObject).stream_size + @num_instance_variables.size
 			stream += @num_instance_variables.size
 			read(stream)
 			Heap.add(self)

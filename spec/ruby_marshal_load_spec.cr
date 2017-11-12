@@ -193,7 +193,7 @@ describe Ruby::Marshal do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-complex-array.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-complex-array.out" ) )
 		object.should be_a(Ruby::Marshal::Array)
-		object.data.should eq(["hello", "hello", ["hello", "test", 1, nil], 1_000_000, true, false, nil, "string", "string"])
+		object.data.should eq(["hello", "hello", ["hello", "test", 1, nil], 1_000_000, true, false, nil, "string", "string", -1.2])
 	end
 
 	it "should read a marshalled string" do

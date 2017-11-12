@@ -170,11 +170,34 @@ describe Ruby::Marshal do
 		Ruby::Marshal.load( File.open(f) ).data.should eq(-16_777_217)
   end
 
-  it "#dump -1_073_741_824-" do
+  it "#dump -1_073_741_824" do
 		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-four-byte-negative-int-lower.out")
 		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(-1_073_741_824) ) }
 		object = Ruby::Marshal.dump(-1_073_741_824)
 		Ruby::Marshal.load( File.open(f) ).data.should eq(-1_073_741_824)
+  end
+
+	it "#dump -1.26479" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-float.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(-1.26479) ) }
+		object = Ruby::Marshal.dump(-1.26479)
+		Ruby::Marshal.load( File.open(f) ).data.should eq(-1.26479)
+  end
+
+	it "#dump \"a string\"" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-string.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump("a string") ) }
+		object = Ruby::Marshal.dump("a string")
+		Ruby::Marshal.load( File.open(f) ).data.should eq("a string")
+  end
+
+	it "#dump an array" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-array.out")
+		a = ["string", 1, -1.2, nil, true, false, [true, nil, :symbol]]
+		b = ["string", 1, -1.2, nil, true, false, [true, nil, "symbol"]]
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(a) ) }
+		object = Ruby::Marshal.dump(a)
+		Ruby::Marshal.load( File.open(f) ).data.should eq(b)
   end
 
 end

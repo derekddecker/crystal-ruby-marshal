@@ -49,8 +49,20 @@ module Ruby::Marshal
 			Ruby::Marshal::Symbol.new(sym)
 		end
 
-		def self.from(sym : ::UInt8 |::Int8 | ::UInt16 | ::Int16 | ::UInt32 | ::Int32 | ::UInt64 | ::Int64) : StreamObject
-			Ruby::Marshal::Integer.get(sym)
+		def self.from(int : ::UInt8 |::Int8 | ::UInt16 | ::Int16 | ::UInt32 | ::Int32 | ::UInt64 | ::Int64) : StreamObject
+			Ruby::Marshal::Integer.get(int)
+		end
+
+		def self.from(float : ::Float) : StreamObject
+			Ruby::Marshal::Float.new(float)
+		end
+
+		def self.from(string : ::String) : StreamObject
+			Ruby::Marshal::String.new(string)
+		end
+
+		def self.from(array : ::Array) : StreamObject
+			Ruby::Marshal::Array.new(array)
 		end
 
 	end

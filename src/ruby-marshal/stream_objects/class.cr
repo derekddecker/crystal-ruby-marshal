@@ -20,7 +20,7 @@ module Ruby::Marshal
 		getter :data
     @data : ::String
 		@byte_sequence : ByteSequence
-		@type_byte = UInt8.new(0x63)
+		TYPE_BYTE = UInt8.new(0x63)
 
 		def initialize(stream : Bytes)
 			@byte_sequence = ByteSequence.new(stream)
@@ -42,7 +42,7 @@ module Ruby::Marshal
 
 		def dump
 			result = ::Bytes.new(1)
-			result[0] = UInt8.new(0x63)
+			result[0] = TYPE_BYTE
 			result.concat(@byte_sequence.dump)
 		end
 
