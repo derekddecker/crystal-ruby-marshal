@@ -65,6 +65,10 @@ module Ruby::Marshal
 			Ruby::Marshal::Array.new(array)
 		end
 
+		def self.from(regex : ::Regex) : StreamObject
+			Ruby::Marshal::Regex.new(regex)
+		end
+
 	end
 
 end

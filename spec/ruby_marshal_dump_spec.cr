@@ -184,13 +184,6 @@ describe Ruby::Marshal do
 		Ruby::Marshal.load( File.open(f) ).data.should eq(-1.26479)
   end
 
-	it "#dump \"a string\"" do
-		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-string.out")
-		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump("a string") ) }
-		object = Ruby::Marshal.dump("a string")
-		Ruby::Marshal.load( File.open(f) ).data.should eq("a string")
-  end
-
 	it "#dump an array" do
 		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-array.out")
 		a = ["string", 1, -1.2, nil, true, false, [true, nil, :symbol]]
@@ -198,6 +191,29 @@ describe Ruby::Marshal do
 		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(a) ) }
 		object = Ruby::Marshal.dump(a)
 		Ruby::Marshal.load( File.open(f) ).data.should eq(b)
+  end
+
+	pending "#dump an instance" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-instance-object.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump("a string") ) }
+		object = Ruby::Marshal.dump("a string")
+		Ruby::Marshal.load( File.open(f) ).data.should eq("a string")
+  end
+
+	# TODO - these should dump InstanceObjects
+	it "#dump an regex" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-regex.out")
+		a = /[A-Za-z0-9]+/
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(a) ) }
+		object = Ruby::Marshal.dump(a)
+		Ruby::Marshal.load( File.open(f) ).data.should eq(a)
+  end
+
+	it "#dump \"a string\"" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-string.out")
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump("a string") ) }
+		object = Ruby::Marshal.dump("a string")
+		Ruby::Marshal.load( File.open(f) ).data.should eq("a string")
   end
 
 end

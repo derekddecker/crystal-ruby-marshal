@@ -18,6 +18,7 @@ module Ruby::Marshal
 		getter :data
     @data : ::Regex
 		@byte_sequence : ByteSequence
+		TYPE_BYTE = UInt8.new(0x2f)
 
 		def initialize(stream : Bytes, @data : ::Regex = ::Regex.new(""))
 			@byte_sequence = ByteSequence.new(stream)
@@ -27,10 +28,16 @@ module Ruby::Marshal
 			super(@byte_sequence.stream_size)
 		end
 
+		def initialize(regex : ::Regex)
+			@byte_sequence = ByteSequence.new(regex.source)
+			@data = regex
+			super(@byte_sequence.stream_size)
+		end
+
 		def dump
-			#output = ::Bytes.new(1) 
-			#output[0] = @type_byte
-			#bytestream.concat(output)
+			result = ::Bytes.new(1)
+			result[0] = TYPE_BYTE
+			result.concat(@byte_sequence.dump)
 		end
 
 	end

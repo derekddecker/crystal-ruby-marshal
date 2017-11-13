@@ -77,22 +77,3 @@ module Ruby::Marshal
 	end
 
 end
-
-macro ruby_marshal_properties(prop_hash)
-
-	{% for prop, klass in prop_hash %}
-		@{{ prop.id }} : {{ klass }}
-	
-		def read_ruby_marshalled_{{ prop.id }}(marshalled_object : ::Ruby::Marshal::Object) : {{klass}} 
-			marshalled_object.read_raw_attr("{{ prop.id }}").as({{ klass }})
-		end
-	{% end %}
-
-	def initialize(marshalled_object : ::Ruby::Marshal::StreamObject)
-		marshalled_object = marshalled_object.as(::Ruby::Marshal::Object)
-		{% for prop, klass in prop_hash %}
-			@{{ prop.id }} = read_ruby_marshalled_{{ prop.id }}(marshalled_object).as({{ klass }})
-		{% end %}
-	end
-
-end
