@@ -25,7 +25,7 @@ module Ruby::Marshal
 			@byte_sequence = ByteSequence.new(stream)
 			float_io = ::IO::Memory.new(@byte_sequence.data)
 			@data = ::Float64.new(float_io.to_s)
-			super(@byte_sequence.stream_size + @byte_sequence.length.size)
+			super(@byte_sequence.stream_size)
 		end
 
 		def initialize(float : ::Float64)

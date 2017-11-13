@@ -25,13 +25,13 @@ module Ruby::Marshal
 		end
 
 		def stream_size
-			@length.data
+			@length.data + @length.size
 		end
 		
 		def dump : ::Bytes
 			result = @length.dump 
 			if result
-				result[1, result.size - 1].concat(@data)  # strip the "i" type byte
+				(result + 1).concat(@data)  # strip the "i" type byte
 			else
 				::Bytes.new(0).concat(@data)
 			end

@@ -12,7 +12,7 @@ module Ruby::Marshal
 		def initialize(stream : Bytes)
 			@byte_sequence = ByteSequence.new(stream)
 			@data = ::String.new(@byte_sequence.data)
-			super(@byte_sequence.stream_size + 1)
+			super(@byte_sequence.stream_size)
 			Heap.add(self)
 		end
 
