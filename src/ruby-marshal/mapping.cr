@@ -4,6 +4,18 @@ module Ruby::Marshal
 
 	macro mapping(properties)
 
+		def num_instance_vars
+			Ruby::Marshal::Integer.get({{ properties.size }})
+		end
+
+		def instance_vars
+			Ruby::Marshal::StreamObjectFactory.from({
+		{% for prop, klass in properties %}
+			"{{ prop.id }}" => @{{ prop.id }},
+		{% end %}
+			})
+		end
+
 		{% for prop, klass in properties %}
 			property :{{ prop.id }}
 		

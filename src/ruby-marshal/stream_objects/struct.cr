@@ -22,6 +22,7 @@ module Ruby::Marshal
 		@struct_name : Symbol
 		@num_members : Integer
 		@members : ::Hash(::String, StreamObject)
+		TYPE_BYTE = UInt8.new(0x53)
 
 		def initialize(stream : Bytes)
       super(0x00)
@@ -72,10 +73,21 @@ module Ruby::Marshal
 			read_attr(name, true)
 		end
 
+		def initialize(str : ::Struct)
+			@size = 0
+      super(@size)
+			@data = Null.new
+			@num_members = str.num_instance_vars
+			@members = str.instance_vars
+			@struct_name = Symbol.new(str.class.to_s)
+		end
+
 		def dump
-			#output = ::Bytes.new(1) 
-			#output[0] = @type_byte
-			#bytestream.concat(output)
+			output = ::Bytes.new(1) 
+			output[0] = TYPE_BYTE
+			output = output.concat(@struct_name.dump)
+										 .concat(@num_members.dump)
+			#							 .concat(@members.dump)
 		end
 
 	end

@@ -69,6 +69,14 @@ module Ruby::Marshal
 			Ruby::Marshal::Regex.new(regex)
 		end
 
+		def self.from(hash : ::Hash) : StreamObject
+			Ruby::Marshal::Hash.new(hash)
+		end
+
+		def self.from(str : ::Struct) : StreamObject
+			Ruby::Marshal::Struct.new(str)
+		end
+
 	end
 
 end

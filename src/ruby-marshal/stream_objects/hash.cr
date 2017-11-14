@@ -14,14 +14,16 @@ module Ruby::Marshal
 	# all the pairs.
 	class Hash < StreamObject
 		
-    alias RawHashObjects = StreamObject | ::Regex | ::Bytes | ::Bool | ::Int32 | ::String | ::Nil | ::Array(Ruby::Marshal::Array::RubyStreamArray) | ::Hash(Ruby::Marshal::StreamObject, Ruby::Marshal::StreamObject) | ::Float64 | ::Hash(RawHashObjects, RawHashObjects)
+    alias RawHashObjects = StreamObject | ::Symbol | ::Regex | ::Bytes | ::Bool | ::Int32 | ::String | ::Nil | ::Array(Ruby::Marshal::Array::RubyStreamArray) | ::Hash(Ruby::Marshal::StreamObject, Ruby::Marshal::StreamObject) | ::Float64 | ::Hash(RawHashObjects, RawHashObjects)
 
 		getter :data, :default_value
 		@data : ::Hash(StreamObject, StreamObject)
 		@num_keys : Integer
 		@default_value : StreamObject | Null
+		TYPE_BYTE = UInt8.new(0x7b)
 
 		def initialize(stream : Bytes)
+			@size = 0
 			@default_value = Null.new
 			@num_keys = Integer.get(stream)
 			@data = ::Hash(StreamObject, StreamObject).new
@@ -31,7 +33,6 @@ module Ruby::Marshal
 			Heap.add(self)
 		end
 
-		# instantiate the class if it exists and assign to @data
 		def read(stream : Bytes)
 			i = 0
 			while(i < @num_keys.data)
@@ -44,7 +45,21 @@ module Ruby::Marshal
 				@data[instance_var_name] = instance_var_value
 				i += 1
 			end
-			return stream
+			stream
+		end
+
+		def initialize(hash : ::Hash(RawHashObjects, RawHashObjects))
+			@default_value = Null.new
+			@data = ::Hash(StreamObject, StreamObject).new
+			@num_keys = Integer.get(hash.keys.size)
+			super(@num_keys.size)
+			hash.each do |key, value|
+				instance_var_name = StreamObjectFactory.from(key)
+				@size += instance_var_name.stream_size
+				instance_var_value = StreamObjectFactory.from(value)
+				@size += instance_var_value.stream_size
+				@data[instance_var_name] = instance_var_value
+			end
 		end
 
 		def each(&block)
@@ -86,9 +101,15 @@ module Ruby::Marshal
 		end
 
 		def dump
-			#output = ::Bytes.new(1) 
-			#output[0] = @type_byte
-			#bytestream.concat(output)
+			output = ::Bytes.new(1) 
+			output[0] = TYPE_BYTE
+			output = output.concat(@num_keys.dump + 1)
+			null = Null.new
+			@data.each do |(key, value)|
+				output = output.concat(key.dump || null.dump)
+				output = output.concat(value.dump || null.dump)
+			end
+			output
 		end
 
 	end

@@ -193,6 +193,16 @@ describe Ruby::Marshal do
 		Ruby::Marshal.load( File.open(f) ).data.should eq(b)
   end
 
+	it "#dump a hash" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-hash.out")
+		a = { "simple" => 1, :hash => -1.2 }
+		b = { "simple" => 1, "hash" => -1.2 }
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(a) ) }
+		`xxd #{f}`
+		object = Ruby::Marshal.dump(a)
+		Ruby::Marshal.load( File.open(f) ).as(Ruby::Marshal::Hash).raw_hash.should eq(b)
+  end
+
 	pending "#dump an instance" do
 		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-instance-object.out")
 		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump("a string") ) }
