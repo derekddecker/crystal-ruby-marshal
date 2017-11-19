@@ -38,7 +38,7 @@ module Ruby::Marshal
 			s = obj_count.size
 			obj_index = 0
 			while(obj_index < @num_objects)
-				object = StreamObjectFactory.from(array[obj_index])
+				object = array[obj_index].ruby_marshal_dump
         @data.as(::Array(RubyStreamArray)) << object
 				obj_index += 1
 				s += object.stream_size

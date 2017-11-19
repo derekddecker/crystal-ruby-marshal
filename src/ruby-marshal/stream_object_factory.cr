@@ -33,50 +33,6 @@ module Ruby::Marshal
 			end
 		end
 
-		def self.from(obj : ::Bool) : StreamObject
-			obj ? True.new(obj) : False.new(obj) 
-		end
-
-		def self.from(obj : ::Nil) : StreamObject
-			Null.new
-		end
-
-		def self.from(obj : ::Class) : StreamObject
-			Ruby::Marshal::Class.new(obj)
-		end
-
-		def self.from(sym : ::Symbol) : StreamObject
-			Ruby::Marshal::Symbol.new(sym)
-		end
-
-		def self.from(int : ::UInt8 |::Int8 | ::UInt16 | ::Int16 | ::UInt32 | ::Int32 | ::UInt64 | ::Int64) : StreamObject
-			Ruby::Marshal::Integer.get(int)
-		end
-
-		def self.from(float : ::Float) : StreamObject
-			Ruby::Marshal::Float.new(float)
-		end
-
-		def self.from(string : ::String) : StreamObject
-			Ruby::Marshal::String.new(string)
-		end
-
-		def self.from(array : ::Array) : StreamObject
-			Ruby::Marshal::Array.new(array)
-		end
-
-		def self.from(regex : ::Regex) : StreamObject
-			Ruby::Marshal::Regex.new(regex)
-		end
-
-		def self.from(hash : ::Hash) : StreamObject
-			Ruby::Marshal::Hash.new(hash)
-		end
-
-		def self.from(str : ::Struct) : StreamObject
-			Ruby::Marshal::Struct.new(str)
-		end
-
 	end
 
 end

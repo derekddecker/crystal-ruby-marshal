@@ -16,34 +16,17 @@ module Ruby::Marshal
 		getter :data
 		@class_name : Symbol
 		@num_instance_variables : Integer
-		@instance_variables : ::Hash(::String, StreamObject)
+		@instance_variables : Hash
 
 		def initialize(stream : Bytes)
       super(0x00)
 			@class_name = StreamObjectFactory.get(stream).as(Symbol)
 			@data = Null.new(stream)
 			stream += @class_name.stream_size
-			@num_instance_variables = Integer.get(stream)
-			@instance_variables = ::Hash(::String, StreamObject).new
-			stream += @num_instance_variables.size
-			@size = @num_instance_variables.size + @class_name.stream_size
-			read(stream)
+			@instance_variables = Hash.new(stream)
+			@num_instance_variables = @instance_variables.num_keys
+			@size = @instance_variables.stream_size + @class_name.stream_size - 1
 			Heap.add(self)
-		end
-
-		def read(stream : Bytes)
-			i = 0
-			while(i < @num_instance_variables.data)
-				instance_var_name = StreamObjectFactory.get(stream)
-				stream += instance_var_name.stream_size
-				@size += instance_var_name.stream_size
-				instance_var_value = StreamObjectFactory.get(stream)
-				stream += instance_var_value.stream_size
-				@size += instance_var_value.stream_size
-				@instance_variables[instance_var_name.data.as(::String)] = instance_var_value
-				i += 1
-			end
-			return stream
 		end
 
 		def populate_class(klass : ::Object)
@@ -51,8 +34,8 @@ module Ruby::Marshal
 		end
 
 		def read_attr(name : ::String, raw = false)
-			key = @instance_variables.has_key?(name) ? name : "@#{name}"
-			attr = @instance_variables.has_key?(key) ? @instance_variables[key] : nil
+			key = @instance_variables.raw_hash.has_key?(name) ? name : "@#{name}"
+			attr = @instance_variables.raw_hash.has_key?(key) ? @instance_variables[key] : nil
 			if(raw && !attr.nil?) 
 				if (attr.is_a?(::Hash))
 					return attr.raw_hash

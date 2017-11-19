@@ -26,6 +26,7 @@ class User
 end
 
 class ExtendedUser
+
 	Ruby::Marshal.mapping({
 		id: ::Int32,
 	})
@@ -42,4 +43,16 @@ end
 
 module TestModule
 
+end
+
+class DumpTestUser
+
+	def initialize ; end
+
+	Ruby::Marshal.mapping({
+		id: ::Int32,
+		name: ::String,
+		valid: ::Bool,
+		opts: ::Hash(String, String),
+	})
 end

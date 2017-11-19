@@ -1,5 +1,6 @@
 require "./stream_object"
 require "./array"
+require "../hash"
 require "./object_pointer"
 
 module Ruby::Marshal
@@ -16,7 +17,7 @@ module Ruby::Marshal
 		
     alias RawHashObjects = StreamObject | ::Symbol | ::Regex | ::Bytes | ::Bool | ::Int32 | ::String | ::Nil | ::Array(Ruby::Marshal::Array::RubyStreamArray) | ::Hash(Ruby::Marshal::StreamObject, Ruby::Marshal::StreamObject) | ::Float64 | ::Hash(RawHashObjects, RawHashObjects)
 
-		getter :data, :default_value
+		getter :data, :default_value, :num_keys
 		@data : ::Hash(StreamObject, StreamObject)
 		@num_keys : Integer
 		@default_value : StreamObject | Null
@@ -49,14 +50,15 @@ module Ruby::Marshal
 		end
 
 		def initialize(hash : ::Hash(RawHashObjects, RawHashObjects))
+			@size = 0
 			@default_value = Null.new
 			@data = ::Hash(StreamObject, StreamObject).new
 			@num_keys = Integer.get(hash.keys.size)
 			super(@num_keys.size)
 			hash.each do |key, value|
-				instance_var_name = StreamObjectFactory.from(key)
+				instance_var_name = key.ruby_marshal_dump
 				@size += instance_var_name.stream_size
-				instance_var_value = StreamObjectFactory.from(value)
+				instance_var_value = value.ruby_marshal_dump
 				@size += instance_var_value.stream_size
 				@data[instance_var_name] = instance_var_value
 			end
@@ -103,6 +105,7 @@ module Ruby::Marshal
 		def dump
 			output = ::Bytes.new(1) 
 			output[0] = TYPE_BYTE
+			#puts @default_value
 			output = output.concat(@num_keys.dump + 1)
 			null = Null.new
 			@data.each do |(key, value)|

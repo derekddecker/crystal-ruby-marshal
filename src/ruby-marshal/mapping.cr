@@ -9,11 +9,11 @@ module Ruby::Marshal
 		end
 
 		def instance_vars
-			Ruby::Marshal::StreamObjectFactory.from({
+			{
 		{% for prop, klass in properties %}
 			"{{ prop.id }}" => @{{ prop.id }},
 		{% end %}
-			})
+			}.ruby_marshal_dump
 		end
 
 		{% for prop, klass in properties %}

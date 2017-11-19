@@ -198,16 +198,37 @@ describe Ruby::Marshal do
 		a = { "simple" => 1, :hash => -1.2 }
 		b = { "simple" => 1, "hash" => -1.2 }
 		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(a) ) }
-		`xxd #{f}`
 		object = Ruby::Marshal.dump(a)
 		Ruby::Marshal.load( File.open(f) ).as(Ruby::Marshal::Hash).raw_hash.should eq(b)
   end
 
-	pending "#dump an instance" do
+	it "#dump a hash with default value" do
+		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-hash-with-default.out")
+		a = Hash(String, String | Int32).new("Default")
+		a["simple"] = 1
+		#puts a["nonexistent"]
+		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(a) ) }
+		#puts `xxd #{f}`
+		object = Ruby::Marshal.dump(a)
+		r = Ruby::Marshal.load( File.open(f) ).as(Ruby::Marshal::HashWithDefault).raw_hash
+		r.should eq(a)
+		r["nada"].should eq("Default")
+	end
+
+	it "#dump an instance" do
 		f =  File.join(File.dirname( __FILE__ ), "tmp", "marshalled-instance-object.out")
-		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump("a string") ) }
-		object = Ruby::Marshal.dump("a string")
-		Ruby::Marshal.load( File.open(f) ).data.should eq("a string")
+		object = DumpTestUser.new
+		object.id = 1
+		object.name = "string name"
+		object.valid = false
+		object.opts = { "this" => "hash" }
+		write = Ruby::Marshal.dump(object)
+		File.open(f, "w") { |f| f.write(write) }
+		puts write.inspect
+		puts `xxd #{f}`
+		#result = Ruby::Marshal.load( DumpTestUser, File.open(f) )
+		#puts result.inspect
+		#result.should eq(object)
   end
 
 	# TODO - these should dump InstanceObjects
@@ -216,7 +237,9 @@ describe Ruby::Marshal do
 		a = /[A-Za-z0-9]+/
 		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(a) ) }
 		object = Ruby::Marshal.dump(a)
-		Ruby::Marshal.load( File.open(f) ).data.should eq(a)
+		result = Ruby::Marshal.load( File.open(f) )
+		#puts result.inspect
+		result.data.should eq(a)
   end
 
 	it "#dump \"a string\"" do
