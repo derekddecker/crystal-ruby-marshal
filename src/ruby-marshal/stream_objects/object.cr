@@ -13,20 +13,33 @@ module Ruby::Marshal
 	# variable names.
 	class Object < StreamObject
 
-		getter :data
+		getter :data, :instance_variables
 		@class_name : Symbol
 		@num_instance_variables : Integer
+		@data : ::Hash(Hash::RawHashObjects, Hash::RawHashObjects)
 		@instance_variables : Hash
+		TYPE_BYTE = UInt8.new(0x6f)
 
 		def initialize(stream : Bytes)
       super(0x00)
 			@class_name = StreamObjectFactory.get(stream).as(Symbol)
-			@data = Null.new(stream)
 			stream += @class_name.stream_size
 			@instance_variables = Hash.new(stream)
+			@data = @instance_variables.data
 			@num_instance_variables = @instance_variables.num_keys
 			@size = @instance_variables.stream_size + @class_name.stream_size - 1
 			Heap.add(self)
+		end
+
+		def initialize(@num_instance_variables : Integer, @instance_variables : Hash, @class_name : Symbol)
+			super(0x00)
+			@data = @instance_variables.data
+			@size = @num_instance_variables.stream_size + @instance_variables.stream_size - 1
+			Heap.add(self)
+		end
+
+		def self.from(obj : ::Object)
+			Object.new(obj.num_instance_vars, obj.instance_vars, Symbol.new(obj.class.to_s))
 		end
 
 		def populate_class(klass : ::Object)
@@ -34,17 +47,8 @@ module Ruby::Marshal
 		end
 
 		def read_attr(name : ::String, raw = false)
-			key = @instance_variables.raw_hash.has_key?(name) ? name : "@#{name}"
-			attr = @instance_variables.raw_hash.has_key?(key) ? @instance_variables[key] : nil
-			if(raw && !attr.nil?) 
-				if (attr.is_a?(::Hash))
-					return attr.raw_hash
-				else
-					return attr.data 
-				end
-			else
-				return attr
-			end
+			key = @data.has_key?(name) ? name : "@#{name}"
+			@data.has_key?(key) ? @data[key] : nil
 		end
 		
 		def read_raw_attr(name : ::String)
@@ -52,9 +56,11 @@ module Ruby::Marshal
 		end
 
 		def dump
-			#output = ::Bytes.new(1) 
-			#output[0] = @type_byte
-			#bytestream.concat(output)
+			result = ::Bytes.new(1)
+			result[0] = TYPE_BYTE
+			result = result.concat(@class_name.dump)
+										 .concat(@num_instance_variables.dump + 2)
+										 .concat(@instance_variables.dump + 1)
 		end
 
 	end

@@ -1,6 +1,6 @@
 class Object
 	def ruby_marshal_dump
-		Ruby::Marshal::InstanceObject.from(self)
+		Ruby::Marshal::Object.from(self)
 	end
 end
 

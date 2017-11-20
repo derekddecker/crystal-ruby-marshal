@@ -11,7 +11,7 @@ module Ruby::Marshal
 		def instance_vars
 			{
 		{% for prop, klass in properties %}
-			"{{ prop.id }}" => @{{ prop.id }},
+			:"@{{ prop.id }}" => @{{ prop.id }},
 		{% end %}
 			}.ruby_marshal_dump
 		end
@@ -20,7 +20,7 @@ module Ruby::Marshal
 			property :{{ prop.id }}
 		
 			def read_ruby_marshalled_{{ prop.id }}(obj : ::Ruby::Marshal::Object | ::Ruby::Marshal::Struct) : {{klass}} 
-				obj.read_raw_attr("{{ prop.id }}").as({{ klass }})
+				{{ klass }}.cast(obj.read_raw_attr("{{ prop.id }}"))
 			end
 		{% end %}
 

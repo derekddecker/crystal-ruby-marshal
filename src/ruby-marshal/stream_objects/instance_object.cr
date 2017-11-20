@@ -27,9 +27,9 @@ module Ruby::Marshal
 
 		def initialize(num_vars : Integer, vars : Hash)
 			super(0x00)
-			@data = Null.new
 			@num_instance_variables = num_vars
 			@instance_variables = vars
+			@data = vars.dump
 			@size = @num_instance_variables.stream_size + @instance_variables.stream_size - 1
 		end
 

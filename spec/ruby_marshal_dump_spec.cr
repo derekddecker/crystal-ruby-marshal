@@ -199,7 +199,7 @@ describe Ruby::Marshal do
 		b = { "simple" => 1, "hash" => -1.2 }
 		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(a) ) }
 		object = Ruby::Marshal.dump(a)
-		Ruby::Marshal.load( File.open(f) ).as(Ruby::Marshal::Hash).raw_hash.should eq(b)
+		Ruby::Marshal.load( File.open(f) ).as(Ruby::Marshal::Hash).data.should eq(b)
   end
 
 	it "#dump a hash with default value" do
@@ -210,7 +210,7 @@ describe Ruby::Marshal do
 		File.open(f, "w") { |f| f.write( Ruby::Marshal.dump(a) ) }
 		#puts `xxd #{f}`
 		object = Ruby::Marshal.dump(a)
-		r = Ruby::Marshal.load( File.open(f) ).as(Ruby::Marshal::HashWithDefault).raw_hash
+		r = Ruby::Marshal.load( File.open(f) ).as(Ruby::Marshal::HashWithDefault).data
 		r.should eq(a)
 		r["nada"].should eq("Default")
 	end
@@ -221,11 +221,9 @@ describe Ruby::Marshal do
 		object.id = 1
 		object.name = "string name"
 		object.valid = false
-		object.opts = { "this" => "hash" }
+		#object.opts = { "this" => "hash" }
 		write = Ruby::Marshal.dump(object)
 		File.open(f, "w") { |f| f.write(write) }
-		puts write.inspect
-		puts `xxd #{f}`
 		#result = Ruby::Marshal.load( DumpTestUser, File.open(f) )
 		#puts result.inspect
 		#result.should eq(object)

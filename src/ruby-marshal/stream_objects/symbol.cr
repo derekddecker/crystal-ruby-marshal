@@ -16,7 +16,7 @@ module Ruby::Marshal
 			Heap.add(self)
 		end
 
-		def initialize(sym : ::Symbol)
+		def initialize(sym : ::Symbol | ::String)
 			@data = sym.to_s
 			@byte_sequence = ByteSequence.new(@data)
 			super(@byte_sequence.stream_size)
