@@ -17,13 +17,27 @@ module Ruby::Marshal
 	class Float < StreamObject
 
 		@data : ::Float64
+		@byte_sequence : ByteSequence
 		getter :data
+		TYPE_BYTE = UInt8.new(0x66)
 
 		def initialize(stream : Bytes)
-			source = ByteSequence.new(stream)
-			float_io = ::IO::Memory.new(source.data)
+			@byte_sequence = ByteSequence.new(stream)
+			float_io = ::IO::Memory.new(@byte_sequence.data)
 			@data = ::Float64.new(float_io.to_s)
-			super(source.stream_size)
+			super(@byte_sequence.stream_size)
+		end
+
+		def initialize(float : ::Float64)
+			@byte_sequence = ByteSequence.new(float.to_s)
+			@data = float
+			super(@byte_sequence.stream_size)
+		end
+
+		def dump
+			result = ::Bytes.new(1)
+			result[0] = UInt8.new(TYPE_BYTE)
+			result.concat(@byte_sequence.dump)
 		end
 
 	end

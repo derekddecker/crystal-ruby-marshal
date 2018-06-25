@@ -234,7 +234,7 @@ puts obj.raw_hash.inspect
 #### Object
 `Ruby::Marshal.load(::Class, IO)` and `Ruby::Marshal.load(::Class, ::String)` are provided as convenience methods for unmarshalling straight into a Crystal object. Any class passed to these methods must implement `#initialize(obj : ::Ruby::Marshal::StreamObject)` in order to read the marshalled data.
 
-The `ruby_marshal_properties` macro is provided as a convenience for simple marshalled objects. It will auto-unmarshal for you provided the correct schema for the data. 
+The `Ruby::Marshal.mapping` macro is provided as a convenience for simple marshalled objects. It will auto-unmarshal for you provided the correct schema for the data. 
 
 Unlike the other datatypes, `#data` in the case of objects will return a `Ruby::Marshall::Null` object. To use an unmarshalled object, cast to `Ruby::Marshal::Object`. You can then reach the data by means of `#read_raw_attr(::String)` or `#read_attr(::String)`.
 
@@ -285,10 +285,9 @@ obj = Ruby::Marshal.load( User, File.read("marshalled-valid.out") )
 puts obj.inspect
 #=> #<User:0x10d5c85a0 @id=1, @name="Test">
 
-# As a convenience to setting these classes up, use the `ruby_marshal_properties` helper macro
+# As a convenience to setting these classes up, use the `Ruby::Marshal.mapping` helper macro
 class User
-	property :id, :name
-	ruby_marshal_properties({ id: ::Int32, name: ::String })
+	Ruby::Marshal.mapping({ id: ::Int32, name: ::String })
 end
 ```
 

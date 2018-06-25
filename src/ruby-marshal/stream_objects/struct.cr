@@ -18,36 +18,22 @@ module Ruby::Marshal
 	# marshaled struct an exception should be raised.
 	class Struct < StreamObject
 
-		getter :data
+		getter :data, :instance_variables
 		@struct_name : Symbol
+		@data : ::Hash(Hash::RawHashObjects, Hash::RawHashObjects)
 		@num_members : Integer
-		@members : ::Hash(::String, StreamObject)
+		@instance_variables : Hash
+		TYPE_BYTE = UInt8.new(0x53)
 
 		def initialize(stream : Bytes)
       super(0x00)
-			@data = Null.new
 			@struct_name = StreamObjectFactory.get(stream).as(Symbol)
 			stream += @struct_name.stream_size
-			@num_members = Integer.get(stream)
-			@members = ::Hash(::String, StreamObject).new
-			stream += @num_members.size
-			@size = @num_members.size + @struct_name.stream_size
-			read(stream)
+			@instance_variables = Hash.new(stream)
+			@data = @instance_variables.data
+			@num_members = @instance_variables.num_keys
+			@size = @instance_variables.size + @struct_name.stream_size - 1
 			Heap.add(self)
-		end
-
-		def read(stream : Bytes)
-			i = 0
-			while(i < @num_members.data)
-				instance_var_name = StreamObjectFactory.get(stream)
-				stream += instance_var_name.stream_size
-				@size += instance_var_name.stream_size
-				instance_var_value = StreamObjectFactory.get(stream)
-				stream += instance_var_value.stream_size
-				@size += instance_var_value.stream_size
-				@members[instance_var_name.data.as(::String)] = instance_var_value
-				i += 1
-			end
 		end
 
 		def populate_class(klass : ::Object)
@@ -55,21 +41,29 @@ module Ruby::Marshal
 		end
 
 		def read_attr(name : ::String, raw = false)
-			key = @members.has_key?(name) ? name : "@#{name}"
-			attr = @members.has_key?(key) ? @members[key] : nil
-			if(raw && !attr.nil?) 
-				if (attr.is_a?(::Hash))
-					return attr.raw_hash
-				else
-					return attr.data 
-				end
-			else
-				return attr
-			end
+			key = @data.has_key?(name) ? name : "@#{name}"
+			@data.has_key?(key) ? @data[key] : nil
 		end
 		
 		def read_raw_attr(name : ::String)
 			read_attr(name, true)
+		end
+
+		def initialize(str : ::Struct)
+			@size = 0
+      super(@size)
+			@num_members = str.num_instance_vars
+			@instance_variables = str.instance_vars
+			@data = @instance_variables.data
+			@struct_name = Symbol.new(str.class.to_s)
+		end
+
+		def dump
+			output = ::Bytes.new(1) 
+			output[0] = TYPE_BYTE
+			output = output.concat(@struct_name.dump)
+										 .concat(@num_members.dump + 2)
+										 .concat(@instance_variables.dump + 1)
 		end
 
 	end

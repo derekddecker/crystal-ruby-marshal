@@ -13,32 +13,42 @@ class User
 		@name = marshalled_object.read_raw_attr("name").as(::String)
 		@valid = marshalled_object.read_raw_attr("valid").as(::Bool)
 		@data = ::Hash(::String | ::Int32 | ::Hash(::String, ::Int32), ::Bool | ::String | ::Int32).new
-		raw_data = marshalled_object.read_attr("data").as(::Ruby::Marshal::Hash) 
-		@data["some"] = raw_data["some"].data.as(::Bool)
-		@data[1] = raw_data[1].data.as(::String)
-		raw_data.each do |(k,v )|
-			if(k.class == Ruby::Marshal::Hash)
-				@data[{"key" => 1}] = v.data.as(::Int32)
-			end
-		end
+		raw_data = marshalled_object.read_attr("data").as(::Hash) 
+		@data["some"] = raw_data["some"].as(::Bool)
+		@data[1] = raw_data[1].as(::String)
+		@data[{"key" => 1}] = raw_data[{"key" => 1}].as(Int32)
 	end
 
 end
 
 class ExtendedUser
-	property :id
-	ruby_marshal_properties({ id: ::Int32 })
+
+	Ruby::Marshal.mapping({
+		id: ::Int32,
+	})
 end
 
 struct Customer
-  property :name, :address, :valid, :age
-
-	def initialize(obj : ::Ruby::Marshal::StreamObject)
-		obj = obj.as(::Ruby::Marshal::Struct)
-		@name = obj.read_raw_attr("name").as(::String)
-		@address = obj.read_raw_attr("address").as(::String)
-		@valid = obj.read_raw_attr("valid").as(::Bool)
-		@age = obj.read_raw_attr("age").as(::Int32)
-	end
+	Ruby::Marshal.mapping({
+		name: ::String,
+		address: ::String,
+		valid: ::Bool,
+		age: ::Int32,
+	})
 end
 
+module TestModule
+
+end
+
+class DumpTestUser
+
+	def initialize ; end
+
+	Ruby::Marshal.mapping({
+		id: ::Int32,
+		name: ::String,
+		valid: ::Bool,
+		opts: ::Hash(String, String),
+	})
+end

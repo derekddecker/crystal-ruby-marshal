@@ -193,7 +193,7 @@ describe Ruby::Marshal do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-complex-array.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-complex-array.out" ) )
 		object.should be_a(Ruby::Marshal::Array)
-		object.data.should eq(["hello", "hello", ["hello", "test", 1, nil], 1_000_000, true, false, nil, "string", "string"])
+		object.data.should eq(["hello", "hello", ["hello", "test", 1, nil], 1_000_000, true, false, nil, "string", "string", -1.2])
 	end
 
 	it "should read a marshalled string" do
@@ -209,12 +209,12 @@ describe Ruby::Marshal do
 		object.read_attr("id", true).should eq(1)
 		object.read_attr("name", true).should eq("Test")
 		object.read_attr("valid", true).should eq(true)
-		data_hash = object.read_attr("data").as(Ruby::Marshal::Hash)
-		data_hash["some"].data.should eq(true)
-		data_hash[1].data.should eq("extra")
-		data_hash.data.each do |(k, v)| 
-			if(k.class == Ruby::Marshal::Hash)
-				v.data.should eq(0x01)
+		data_hash = object.read_attr("data").as(Hash)
+		data_hash["some"].should eq(true)
+		data_hash[1].should eq("extra")
+		data_hash.each do |(k, v)| 
+			if(k.class == Hash)
+				v.should eq(0x01)
 			end
 		end
 	end
@@ -238,16 +238,14 @@ describe Ruby::Marshal do
 	it "should read a marshalled hash" do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-hash.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-hash.out" ) )
-		object.as(::Ruby::Marshal::Hash)["simple"].data.should eq("hash")
+		object.as(::Ruby::Marshal::Hash)["simple"].should eq("hash")
 	end
 
 	it "should read a marshalled hash with a default" do
 		#puts `xxd #{SPEC_ROOT}/data/marshalled-hash-with-default.out`
 		object = Ruby::Marshal.load( File.read( "#{SPEC_ROOT}/data/marshalled-hash-with-default.out" ) ).as(Ruby::Marshal::Hash)
-		object["key"].data.should eq(1)
-		object.default_value.data.should eq("default_value")
-		raw_hash = object.raw_hash
-		raw_hash["new_key"].should eq("default_value")
+		object["key"].should eq(1)
+		object.default_value.should eq("default_value")
 	end
 
 	it "should read a marshalled class" do
@@ -295,9 +293,8 @@ describe Ruby::Marshal do
 		object.should be_a(Ruby::Marshal::UserClass)
 		object = object.as(Ruby::Marshal::UserClass)
 		object.class_name.data.should eq("UserHash")
-		object.data.should be_a(Ruby::Marshal::HashWithDefault)
-		wrapped_object = object.data.as(Ruby::Marshal::HashWithDefault)
-		wrapped_object["data"].data.should eq(123)
+		wrapped_object = object.data.as(Hash)
+		wrapped_object["data"].should eq(123)
 	end
 
 end

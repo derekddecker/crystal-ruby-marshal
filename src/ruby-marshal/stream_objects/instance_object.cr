@@ -13,37 +13,38 @@ module Ruby::Marshal
 
 		getter :data
 		@num_instance_variables : Integer
-		@instance_variables : ::Hash(::String, StreamObject)
+		@instance_variables : Hash
 
 		def initialize(stream : Bytes)
       super(0x00)
 			@data = StreamObjectFactory.get(stream)
-			stream += 1 + @data.as(Ruby::Marshal::StreamObject).stream_size
-			@num_instance_variables = Integer.get(stream)
-			@instance_variables = ::Hash(::String, StreamObject).new
-			@size = 1 + @data.as(Ruby::Marshal::StreamObject).stream_size + @num_instance_variables.size
-			stream += @num_instance_variables.size
-			read(stream)
+			stream += @data.stream_size
+			@instance_variables = Hash.new(stream)
+			@num_instance_variables = @instance_variables.num_keys
+			@size = @instance_variables.stream_size + @data.stream_size - 1
 			Heap.add(self)
 		end
 
-		# read instance variables
-		def read(stream : Bytes)
-			i = 0
-			while(i < @num_instance_variables.data)
-				instance_var_name = StreamObjectFactory.get(stream)
-				stream += instance_var_name.stream_size
-				@size += instance_var_name.stream_size
-				instance_var_value = StreamObjectFactory.get(stream)
-				stream += instance_var_value.stream_size
-				@size += instance_var_value.stream_size
-				@instance_variables[instance_var_name.data.as(::String)] = instance_var_value
-				i += 1
-			end
+		def initialize(num_vars : Integer, vars : Hash)
+			super(0x00)
+			@num_instance_variables = num_vars
+			@instance_variables = vars
+			@data = vars.dump
+			@size = @num_instance_variables.stream_size + @instance_variables.stream_size - 1
+		end
+
+		def self.from(obj : ::Object)
+			InstanceObject.new(obj.num_instance_vars, obj.instance_vars)
 		end
 
 		def data
 			@data.data
+		end
+
+		def dump
+			#output = ::Bytes.new(1) 
+			#output[0] = @type_byte
+			#bytestream.concat(output)
 		end
 
 	end

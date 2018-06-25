@@ -6,23 +6,26 @@ module Ruby::Marshal
 	class Symbol < StreamObject
 
 		getter :data
+		@type_byte = UInt8.new(0x3a)
+		@byte_sequence : ByteSequence
 
 		def initialize(stream : Bytes)
-			@data = ""
-			symbol_length = Integer.get(stream)
-			@symbol_length = symbol_length.size.as(Int32)
-      super(symbol_length.data)
-			stream += @symbol_length
-			read(stream)
+			@byte_sequence = ByteSequence.new(stream)
+			@data = ::String.new(@byte_sequence.data)
+			super(@byte_sequence.stream_size)
 			Heap.add(self)
 		end
 
-		def read(stream : Bytes)
-			@data = ::String.new(stream[0, size])
+		def initialize(sym : ::Symbol | ::String)
+			@data = sym.to_s
+			@byte_sequence = ByteSequence.new(@data)
+			super(@byte_sequence.stream_size)
 		end
 
-		def stream_size
-			1 + @symbol_length + size
+		def dump
+			output = ::Bytes.new(1) 
+			output[0] = @type_byte
+			output.concat(@byte_sequence.dump)
 		end
 
 	end

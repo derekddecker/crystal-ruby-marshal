@@ -5,6 +5,7 @@ module Ruby::Marshal
 	class True < StreamObject
 
 		@data : Bool
+		@type_byte = UInt8.new(0x54)
 		getter :data
 
 		def initialize(stream : Bytes)
@@ -12,9 +13,17 @@ module Ruby::Marshal
 			@data = true
 		end
 
-		def read(stream : Bytes)
-			# noop
+		def initialize(bool : ::Bool)
+			super(0x00)
+			@data = true
 		end
+
+		def dump
+			output = ::Bytes.new(1) 
+			output[0] = @type_byte
+			output
+		end
+
 	end
 
 end

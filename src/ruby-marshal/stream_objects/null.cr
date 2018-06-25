@@ -6,6 +6,7 @@ module Ruby::Marshal
 
 		getter :data
     @data : ::Nil
+		@type_byte = UInt8.new(0x30)
 
 		def initialize(stream : Bytes)
       super(Int32.new(0x00))
@@ -17,8 +18,10 @@ module Ruby::Marshal
 			@data = nil
 		end
 
-		def read(stream : Bytes)
-			# noop
+		def dump
+			output = ::Bytes.new(1) 
+			output[0] = @type_byte
+			output
 		end
 
 	end

@@ -18,7 +18,7 @@ module Ruby::Marshal
 	end
 
 	def self.load(klass : ::Class, source : IO)
-		klass.new( self._load(source.get_to_end) )
+		klass.new( self._load(source.gets_to_end.to_slice) )
 	end
 
 	# The first two bytes of the stream contain the major and minor version, each as
@@ -58,6 +58,18 @@ module Ruby::Marshal
 
 	def self.process_stream(stream : Bytes) : StreamObject
 		return StreamObjectFactory.get(stream)
+	end
+
+	def self.dump(obj) : ::Bytes
+		obj_bytes = obj.ruby_marshal_dump.dump
+		version_bytes.concat(obj_bytes || Null.new.dump)
+	end
+
+	def self.version_bytes
+		bytestream = ::Bytes.new(2)
+		bytestream[0] = UInt8.new(MAJOR_VERSION)
+		bytestream[1] = UInt8.new(MINOR_VERSION)
+		bytestream
 	end
 
 end

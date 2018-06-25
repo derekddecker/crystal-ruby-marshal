@@ -1,5 +1,6 @@
 require "./stream_object"
 require "./array"
+require "../hash"
 require "./object_pointer"
 
 module Ruby::Marshal
@@ -14,24 +15,25 @@ module Ruby::Marshal
 	# all the pairs.
 	class Hash < StreamObject
 		
-    alias RawHashObjects = StreamObject | ::Regex | ::Bytes | ::Bool | ::Int32 | ::String | ::Nil | ::Array(Ruby::Marshal::Array::RubyStreamArray) | ::Hash(Ruby::Marshal::StreamObject, Ruby::Marshal::StreamObject) | ::Float64 | ::Hash(RawHashObjects, RawHashObjects)
+    alias RawHashObjects = ::Symbol | ::Float64 | ::Regex | ::Bytes | ::Bool | ::Int32 | ::String | ::Nil | ::Array(RawHashObjects) |  ::Hash(RawHashObjects, RawHashObjects)
 
-		getter :data, :default_value
-		@data : ::Hash(StreamObject, StreamObject)
+		getter :data, :default_value, :num_keys
+		@data : ::Hash(RawHashObjects, RawHashObjects) # RawHashObjects # ::Hash(StreamObject, StreamObject)
 		@num_keys : Integer
-		@default_value : StreamObject | Null
+		@default_value : RawHashObjects
+		TYPE_BYTE = UInt8.new(0x7b)
 
 		def initialize(stream : Bytes)
-			@default_value = Null.new
+			@size = 0
+			@default_value = nil
 			@num_keys = Integer.get(stream)
-			@data = ::Hash(StreamObject, StreamObject).new
+			@data = ::Hash(RawHashObjects, RawHashObjects).new
 			stream += @num_keys.size
 			super(@num_keys.size)
 			read(stream)
 			Heap.add(self)
 		end
 
-		# instantiate the class if it exists and assign to @data
 		def read(stream : Bytes)
 			i = 0
 			while(i < @num_keys.data)
@@ -41,10 +43,25 @@ module Ruby::Marshal
 				instance_var_value = StreamObjectFactory.get(stream)
 				stream += instance_var_value.stream_size
 				@size += instance_var_value.stream_size
-				@data[instance_var_name] = instance_var_value
+				@data[instance_var_name.data] = instance_var_value.data
 				i += 1
 			end
-			return stream
+			stream
+		end
+
+		def initialize(hash : ::Hash(RawHashObjects, RawHashObjects))
+			@size = 0
+			@default_value = nil
+			@data = ::Hash(RawHashObjects, RawHashObjects).new
+			@num_keys = Integer.get(hash.keys.size)
+			super(@num_keys.size)
+			hash.each do |key, value|
+				instance_var_name = key.ruby_marshal_dump
+				@size += instance_var_name.stream_size
+				instance_var_value = value.ruby_marshal_dump
+				@size += instance_var_value.stream_size
+				@data[instance_var_name.data] = instance_var_value.data
+			end
 		end
 
 		def each(&block)
@@ -55,10 +72,10 @@ module Ruby::Marshal
 
 		macro add_hash_accessor(klass)
 			def [](requested_key : {{klass}})
-				result = Null.new
+				result = nil
 				@data.each do |(k, v)|
-					if(k.data.class == {{klass}})
-						if k.data.as({{klass}}) == requested_key
+					if(k.class == {{klass}})
+						if k.as({{klass}}) == requested_key
 							result = v 
 							break
 						 end
@@ -71,18 +88,16 @@ module Ruby::Marshal
 		add_hash_accessor ::String
 		add_hash_accessor ::Int32
 
-		def raw_hash : ::Hash(RawHashObjects, RawHashObjects)
-			unless @default_value.data.nil?
-				raw_hash = ::Hash(RawHashObjects, RawHashObjects).new { @default_value.data }
-			else
-				raw_hash = ::Hash(RawHashObjects, RawHashObjects).new 
+		def dump
+			output = ::Bytes.new(1) 
+			output[0] = TYPE_BYTE
+			output = output.concat(@num_keys.dump + 1)
+			null = Null.new
+			@data.each do |(key, value)|
+				output = output.concat(key.ruby_marshal_dump.dump || null.dump)
+				output = output.concat(value.ruby_marshal_dump.dump || null.dump)
 			end
-			@data.each do |(k, v)|
-				key = (k.class == Ruby::Marshal::Hash) ? k.as(Hash).raw_hash : k.data
-				value = (v.class == Ruby::Marshal::Hash) ? v.as(Hash).raw_hash : v.data
-				raw_hash[key] = value
-			end
-			raw_hash
+			output
 		end
 
 	end
